@@ -11,7 +11,7 @@ const app = express()
 //routings
 app.use('/user',router)
 app.get('/',(req,res)=>{
-  res.send('<h1>hello world </h1>')
+  res.send('<h1>hello world123 </h1>')
 })
 const port=8000;
 app.listen(port,console.log(`Example app listening on port ${port}`));
