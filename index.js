@@ -14,6 +14,8 @@ app.get('/',(req,res)=>{
   console.log('hello world get function executed')
   res.send('<h1>hello world..</h1>')
 })
+
+
 const port=8000;
 app.listen(port,console.log(`Example app listening on port ${port}`));
 dbConnect();
