@@ -1,0 +1,1 @@
+mongodb+srv://user44:<db_password>@cluster2.dvugm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2
