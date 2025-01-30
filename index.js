@@ -1,21 +1,19 @@
 import express from  'express'
+import path from 'path'
 import mongoose from 'mongoose'
 import { faker } from '@faker-js/faker';
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken' 
 import dbConnect from './db/db.js';
-import router from './routes/user.js';
-
+import router from './routes/user/user.js';
 
 const app = express()
-//routings
-app.use('/user',router)
-app.get('/',(req,res)=>{
-  console.log('hello world get function executed')
-  res.send('<h1>hello world..</h1>')
-})
 
+app.use(express.json())
+app.use('/static',express.static(path.join(process.cwd(),'static')))  //static files  handling
+app.set('view engine', 'ejs');                                        //ejs engine
+app.set('views','./views')
 
+app.use('/',router) //Routings #############################
+ 
 const port=8000;
 app.listen(port,console.log(`Example app listening on port ${port}`));
 dbConnect();
