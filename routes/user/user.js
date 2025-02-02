@@ -16,16 +16,29 @@ router.route('/user')
 .delete(userDel)
 router.get('/login',login)  
 
-router.post('/upload',  uploadMulter.single('file'), async(req, res) => {
+router.post('/upload',  
+    uploadMulter.array('files', 10), async(req, res) => {
     try {
-      if (!req.file) {
+      if (!req.files) {
         return res.status(400).send('No file uploaded.');
       }
+      const uploadResult=[]
+      
+      for(const file of req.files){
+        const resp=await uploadCloudinary(file)
+        uploadResult.push(resp)
+      }
+      
       res.send({
-        "cloudinary file destination":req.file.filename
+        "file url":uploadResult
       });
     } catch (err) {
+    console.log(err)
       res.status(500).send('Error uploading file.');
     }
   });
+router.post('/test',(req,res)=>{
+    const data = req.body
+    res.send(data)
+})
 export default router;
