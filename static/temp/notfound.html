@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404 · Page Not Found</title>
+  <style>
+    :root{--bg1:#67738f;--bg2:#0ea5a4;--accent:#7c3aed}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent),
+                  radial-gradient(900px 400px at 90% 90%, rgba(14,165,164,0.08), transparent),
+                  linear-gradient(180deg,var(--bg1), #071033);
+      color:#e6eef8;
+      display:flex;align-items:center;
+      flex-direction: column;
+      justify-content:center;padding:24px;
+      gap: 20px;
+    }
+
+    .card{
+      max-width:900px;width:100%;
+      background:linear-gradient(180deg, rgba(225, 39, 39, 0.1), rgba(15, 235, 187, 0.2));
+      border:1px solid rgba(255,255,255,0.5);
+      border-radius:16px;padding:48px;backdrop-filter: blur(6px);
+      display:flex;gap:32px;align-items:center;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    }
+
+    .left{flex:0 0 170px;text-align:center}
+    .num{font-size:96px;line-height:1;font-weight:700;background:linear-gradient(90deg,var(--bg2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .cloud{font-size:12px;color:rgba(230,238,248,0.6);margin-top:6px}
+
+    .right{flex:1}
+    h1{margin:0;font-size:28px}
+    p{margin:12px 0 20px;color:rgba(230,238,248,0.78);line-height:1.5}
+
+    .btn{
+      display:inline-block;padding:12px 18px;border-radius:10px;text-decoration:none;
+      background:linear-gradient(90deg,var(--accent),var(--bg2));
+      color:white;font-weight:600;box-shadow:0 6px 18px rgba(124,58,237,0.18);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(14,165,164,0.12)}
+
+    /* subtle floating dots */
+    .dots{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:20px}
+    .dot{position:absolute;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.06);animation:float 8s ease-in-out infinite}
+    .dot.d1{left:8%;top:10%;animation-duration:7s}
+    .dot.d2{left:85%;top:20%;width:16px;height:16px;animation-duration:9s}
+    .dot.d3{left:30%;top:80%;animation-duration:11s}
+    @keyframes float{
+      0%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-18px) scale(1.05)}
+      100%{transform:translateY(0) scale(1)}
+    }
+
+    /* responsive */
+    @media (max-width:640px){
+      .card{flex-direction:column;align-items:flex-start;padding:28px}
+      .left{width:100%;text-align:left}
+      .num{font-size:64px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="notfound-title">
+    <div class="left" aria-hidden="true">
+      <div class="num">404</div>
+      <div class="cloud">Page not found</div>
+    </div>
+
+    <div class="right">
+      <h1 id="notfound-title">We can't find that page.</h1>
+      <p>Either the page was moved, deleted, or the URL is incorrect. Try returning home or use the link below.</p>
+      <a class="btn" href="/" title="Go to homepage">← Back to Home</a>
+    </div>
+     <div>
+
+     </div>
+    
+    <div class="dots" aria-hidden="true">
+      <span class="dot d1"></span>
+      <span class="dot d2"></span>
+      <span class="dot d3"></span>
+    </div>
+  </div>
+   <div class="card" style="background-color: rgb(230, 238, 248,0.5);flex-wrap: wrap;" >
+
+    <a class="btn" style="padding:5px 10px" href="/html/add" >Add html</a>
+    <a class="btn" style="padding:5px 10px" href="/user/login" >user/login</a>
+
+   </div>
+</body>
+</html>
