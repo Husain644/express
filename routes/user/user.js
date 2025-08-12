@@ -7,16 +7,15 @@ import { userGet,userPost,userDel,login } from '../../controllers/user/user.js';
 import { tokenVerify } from '../../middleware/middle.js';
 import uploadCloudinary from '../../utils/cloudinary.js'
 import uploadMulter from '../../middleware/multer.js';
-const router=express.Router()
 
-
-router.route('/user')
+const userRouter=express.Router()
+userRouter.route('/user')
 .get(tokenVerify,userGet)
 .post(userPost)
 .delete(userDel)
-router.get('/login',login)  
+userRouter.get('/login',login)  
 
-router.post('/upload',  
+userRouter.post('/upload',  
     uploadMulter.array('files', 10), async(req, res) => {
     try {
       if (!req.files) {
@@ -37,12 +36,12 @@ router.post('/upload',
       res.status(500).send('Error uploading file.');
     }
   });
-router.post('/test',(req,res)=>{
+userRouter.post('/test',(req,res)=>{
     const data = req.body
     res.send(data)
 })
-router.get('/test',(req,res)=>{
+userRouter.get('/test',(req,res)=>{
     const data = {"name":"husain"}
     res.send(data)
 })
-export default router;
+export default userRouter;

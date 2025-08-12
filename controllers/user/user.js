@@ -1,8 +1,4 @@
 import User from "../../models/user/account.js"
-
-
-
-
 async function userGet(req,res){
 const id=req.body.id
 console.log('id is ',id)
@@ -19,8 +15,6 @@ try {
 } catch (error) {
     res.send(error.message || 'something went wrong')
 }
-
-
 }
 
 async function userPost(req,res){

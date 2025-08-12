@@ -2,7 +2,7 @@ import express from  'express'
 import multer from 'multer'
 import path from 'path'
 import dbConnect from './db/db.js';
-import router from './routes/user/user.js';
+import router from './routes/main.js';
 import bodyParser from 'body-parser'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
