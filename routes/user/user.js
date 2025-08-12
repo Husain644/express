@@ -41,4 +41,8 @@ router.post('/test',(req,res)=>{
     const data = req.body
     res.send(data)
 })
+router.get('/test',(req,res)=>{
+    const data = {"name":"husain"}
+    res.send(data)
+})
 export default router;
