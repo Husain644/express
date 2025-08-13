@@ -1,0 +1,9 @@
+
+
+ssh_privet key absolute address="D:\node\express\ubuntu_oracle\ssh_privet.key"
+username=ubuntu
+ipv4address=161.118.171.56
+
+in git or powershell enter
+
+ssh -i "D:\node\express\ubuntu_oracle\ssh_privet.key" ubuntu@161.118.171.56
