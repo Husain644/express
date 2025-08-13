@@ -58,6 +58,7 @@
     #filename{
    padding: 10px;
    min-width: 300px;
+   border-radius: 10px;
     }
     </style>
 </head>
@@ -72,10 +73,12 @@
           id="myTextarea"
           ></textarea>
       </div>
-      <h4 id="responseText"></h4>
+      <h4 id="responseText">
+       
+      </h4>
       <div class="btnwrapper">
-        <button >
-            click 
+         <button >
+            Edit Page
          </button>
          <button onclick="sendData()" >
             post
@@ -87,8 +90,11 @@
 async function sendData() {
   const fileName=document.getElementById("filename").value;
   const textValue = document.getElementById("myTextarea").value;
-
-  try {
+  if(fileName==='' | textValue===''){
+    alert('please enter file name and file content')
+  }
+  else{
+      try {
     const response = await fetch("/html/gethtml", {
       method: "POST",
       headers: {
@@ -102,9 +108,11 @@ async function sendData() {
     }
 
     const data = await response.json(); // assuming JSON response
-    document.getElementById("responseText").innerText = data.reply || "No reply received";
+    const url=  data.reply 
+    document.getElementById("responseText").innerHTML = data.msg?`<h4>${data.msg}</h4>`:`<a href="/html/file/${url}" target="_blank">See Preview</a>` ||`<p>No Getting Responce</p>`
   } catch (error) {
     document.getElementById("responseText").innerText = "Error: " + error.message;
+  }
   }
 }
 </script>
