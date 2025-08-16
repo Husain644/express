@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/html/static/css/index.css">
+    <title>add HTML Content to server</title>
+</head>
+<body>
+    <h4>This is webpage for save your html content in server and give you a link for your page</h4>
+    <h3>Add Html Content to this Box</h3> 
+    <p class="viewLink">
+      <a href="/html/static/view.html">
+        view all files
+      </a>
+    </p>
+    <div class="textareaWrapper">
+      <div class="input-wrapper">
+        <input id="filename" placeholder="enter file name with extension" />
+        <div class="dropdown">
+          <select id="myDropdown">
+            <option value="others">- Select -</option>
+            <option value="react">React js</option>
+            <option value="react-native">React Native</option>
+            <option value="express">Express</option>
+            <option value="server">Server and cloud</option>
+            <option value="tools">Tolls,like,git,linux,vscode</option>
+          </select>
+        </div>
+        <input type="file" id="myFilesId" name="myFiles"  accept="*/*">
+      </div>
+      <div class="textareaWrapperInner">
+        <textarea placeholder="enter your html" value="" id="myTextarea"></textarea>
+        <div id="preview">
+          <h5 class="prev-heading">see preview</h5>
+          <iframe id="myIframe"></iframe>
+        </div>
+      </div>
+    </div>
+      <h4 id="responseText">
+       
+      </h4>
+      <div class="btnwrapper">
+         <button >
+            Edit Page
+         </button>
+         <button onclick="sendData()" >
+            post
+         </button>
+      </div>
+  
+   
+</body>
+
+<script>
+async function sendData() {
+  const fileName = document.getElementById("filename").value;
+  const textValue = document.getElementById("myTextarea").value;
+  const category = document.getElementById("myDropdown").value;
+  const myFiles = document.getElementById("myFilesId").files;
+
+  // if (fileName === '' | textValue === '' || myFiles.length < 1) {
+  //   alert('Please enter file name, HTML content, and select at least one file');
+  //   return;
+  // }
+
+  // ✅ Use FormData instead of JSON
+  const formData = new FormData();
+  formData.append("fileName", fileName);
+  formData.append("html", textValue);
+  formData.append("category", category);
+   formData.append("myFiles", myFiles)
+
+  // Append each file
+  for (let i = 0; i < myFiles.length; i++) {
+    formData.append("myFiles", myFiles[i]); // "myFiles" matches multer field name
+  }
+
+  try {
+    const response = await fetch("/html/gethtml", {
+      method: "POST",
+      body: formData // no headers! browser sets correct multipart boundary
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    const file = data.fileName;
+    const folderName = data.folderName;
+    document.getElementById("responseText").innerHTML =
+      data.msg
+        ? `<h4>${data.msg}</h4>`
+        : `<a href="/html/folderName/${folderName}/file/${file}" target="_blank">See Preview</a>` || `<p>No Response</p>`;
+  } catch (error) {
+    document.getElementById("responseText").innerText = "Error: " + error.message;
+  }
+
+  // Reset form
+  document.getElementById("filename").value = "";
+  document.getElementById("myTextarea").value = "";
+  document.getElementById("myIframe").srcdoc = "";
+}
+const iframe = document.getElementById("myIframe");
+document.getElementById("myTextarea").addEventListener("input", function () {
+  iframe.srcdoc =document.getElementById("myTextarea").value;
+})
+</script>
+</html>

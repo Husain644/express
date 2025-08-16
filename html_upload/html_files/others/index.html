@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>React Native Geolocation — Methods & Options</title>
+  <style>
+    :root{
+      --bg: #313542;
+      --panel: #12182c;
+      --panel-2:#474d69;
+      --text:#e6eaf5;
+      --muted:#a7b1d6;
+      --accent:#7c9cff;
+      --accent-2:#6bf;
+      --border:#1e2746;
+      --chip:#1a2140;
+      --code:#0d1228;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 85% -10%, #1a2350 0%, rgba(26,35,80,0) 60%),
+                  radial-gradient(900px 500px at -10% 20%, #0b2b4d 0%, rgba(11,43,77,0) 50%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    .container{max-width:1100px;margin:40px auto;padding:24px}
+
+    header{
+      background:linear-gradient(180deg, rgba(124,156,255,.18), rgba(124,156,255,0));
+      border:1px solid var(--border);
+      padding:28px; border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter: blur(6px);
+    }
+    h1{margin:0 0 8px;font-size: clamp(24px, 3.2vw, 38px);letter-spacing:.3px}
+    .subtitle{color:var(--muted)}
+
+    .grid{display:grid; gap:22px; grid-template-columns: 1fr}
+    @media (min-width: 900px){
+      .grid{grid-template-columns: 1fr 1fr}
+    }
+
+    .card{
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border:1px solid var(--border); border-radius: var(--radius);
+      padding:20px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    .full{grid-column: 1 / -1}
+
+    h2{margin:0 0 10px; font-size: clamp(18px, 2.2vw, 24px)}
+    p{margin:0 0 12px}
+
+    .kbd, code{background:var(--code); border:1px solid var(--border); padding:2px 6px; border-radius:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:.95em}
+
+    table{width:100%; border-collapse: collapse; overflow:hidden; border-radius:14px; border:1px solid var(--border)}
+    thead th{background: #111731; color:#cdd6ff; text-align:left; padding:12px 14px; position:sticky; top:0; z-index:1}
+    tbody td{padding:12px 14px; border-top:1px solid var(--border); vertical-align: top}
+    tbody tr:nth-child(odd){background:#0e1430}
+    tbody tr:nth-child(even){background:#0b122a}
+
+    .tag{display:inline-block; padding:4px 8px; border-radius:999px; background:var(--chip); border:1px solid var(--border); color:var(--muted); font-size:.85em}
+
+    details{
+      border:1px solid var(--border); border-radius:14px; padding:14px 16px; background: linear-gradient(180deg, #101731, #0d152e);
+    }
+    summary{cursor:pointer; font-weight:600; color:var(--accent)}
+
+    .footer{color:var(--muted); font-size:.9em; text-align:center; margin-top:26px}
+    .small{font-size:.95em; color:var(--muted)}
+
+    .pillbar{
+      display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>React Native Geolocation — Methods & Options</h1>
+      <div class="subtitle">Reference for <code>getCurrentPosition</code>, <code>watchPosition</code>, configuration, options, and error objects.</div>
+      <div class="pillbar">
+        <span class="tag">RN Community</span>
+        <span class="tag">TypeScript types</span>
+        <span class="tag">Defaults included</span>
+      </div>
+    </header>
+
+    <section class="card full">
+      <h2>Methods</h2>
+      <table aria-label="Geolocation Methods">
+        <thead>
+          <tr>
+            <th style="width:220px">Method</th>
+            <th>Description</th>
+            <th style="width:300px">Parameters</th>
+            <th style="width:180px">Default Values</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>getCurrentPosition(success, error?, options?)</code></td>
+            <td>Gets the device’s current location once and invokes <code>success</code> with a <code>GeolocationResponse</code>.</td>
+            <td>
+              <div><code>success(position)</code> — required</div>
+              <div><code>error(err)</code> — optional</div>
+              <div><code>options</code> — optional (<a href="#opts">GeolocationOptions</a>)</div>
+            </td>
+            <td>Uses <a href="#opts">GeolocationOptions</a> defaults.</td>
+          </tr>
+          <tr>
+            <td><code>watchPosition(success, error?, options?)</code></td>
+            <td>Watches device location changes and repeatedly calls <code>success</code>. Returns a <code>watchID</code>.</td>
+            <td>
+              <div>Same parameters as <code>getCurrentPosition</code>.</div>
+            </td>
+            <td>Uses <a href="#opts">GeolocationOptions</a> defaults.</td>
+          </tr>
+          <tr>
+            <td><code>clearWatch(watchID)</code></td>
+            <td>Stops updates started by <code>watchPosition</code>.</td>
+            <td><code>watchID: number</code></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><code>stopObserving()</code> <span class="tag">Deprecated</span></td>
+            <td>Deprecated — use <code>clearWatch</code> instead.</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><code>requestAuthorization(success?, error?)</code></td>
+            <td>Requests permission to access location (platform-dependent).</td>
+            <td>
+              <div><code>success()</code> — optional</div>
+              <div><code>error(err)</code> — optional</div>
+            </td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><code>setRNConfiguration(config)</code></td>
+            <td>Sets global configuration for geolocation calls.</td>
+            <td><code>config: GeolocationConfiguration</code></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card full" id="opts">
+      <h2>GeolocationOptions (for <code>getCurrentPosition</code> / <code>watchPosition</code>)</h2>
+      <table aria-label="Geolocation Options">
+        <thead>
+          <tr>
+            <th style="width:220px">Option</th>
+            <th style="width:160px">Type</th>
+            <th style="width:160px">Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>enableHighAccuracy</code></td>
+            <td><code>boolean</code></td>
+            <td><code>false</code></td>
+            <td>Use GPS/high-accuracy mode (higher battery usage).</td>
+          </tr>
+          <tr>
+            <td><code>timeout</code></td>
+            <td><code>number (ms)</code></td>
+            <td><code>Infinity</code></td>
+            <td>Max time to wait before failing with a timeout error.</td>
+          </tr>
+          <tr>
+            <td><code>maximumAge</code></td>
+            <td><code>number (ms)</code></td>
+            <td><code>0</code></td>
+            <td>Accept a cached location up to this age.</td>
+          </tr>
+          <tr>
+            <td><code>distanceFilter</code> <span class="tag">iOS only</span></td>
+            <td><code>number (meters)</code></td>
+            <td><code>0</code></td>
+            <td>Minimum movement (in meters) before an update event is emitted.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small">On Android, calls may resolve immediately if a recent cached location is available, or take longer while a fresh fix is obtained.</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>GeolocationConfiguration</h2>
+        <table aria-label="Geolocation Configuration">
+          <thead>
+            <tr>
+              <th style="width:220px">Key</th>
+              <th style="width:160px">Type</th>
+              <th style="width:160px">Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>skipPermissionRequests</code></td>
+              <td><code>boolean</code></td>
+              <td><code>false</code></td>
+              <td>If <code>true</code>, you must request permissions yourself.</td>
+            </tr>
+            <tr>
+              <td><code>authorizationLevel</code> <span class="tag">iOS only</span></td>
+              <td><code>'whenInUse' | 'always'</code></td>
+              <td><code>'whenInUse'</code></td>
+              <td>Permission scope to request from the user.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>GeolocationResponse</h2>
+        <details>
+          <summary>Structure</summary>
+          <pre><code>{
+  coords: {
+    latitude: number,
+    longitude: number,
+    altitude?: number,
+    accuracy: number,
+    altitudeAccuracy?: number,
+    heading?: number,
+    speed?: number
+  },
+  timestamp: number // ms
+}</code></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>GeolocationError</h2>
+        <table aria-label="Geolocation Error">
+          <thead>
+            <tr>
+              <th style="width:220px">Key</th>
+              <th style="width:160px">Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>code</code></td>
+              <td><code>1 | 2 | 3</code></td>
+              <td>
+                <div><code>1</code> — Permission denied</div>
+                <div><code>2</code> — Position unavailable</div>
+                <div><code>3</code> — Timeout</div>
+              </td>
+            </tr>
+            <tr>
+              <td><code>message</code></td>
+              <td><code>string</code></td>
+              <td>Human-readable description of the error.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Usage Tips</h2>
+        <ul>
+          <li>Prefer <code>watchPosition</code> for live tracking; always call <code>clearWatch</code> when finished.</li>
+          <li>On iOS, tune <code>distanceFilter</code> to reduce battery drain.</li>
+          <li>Handle permission flows differently on iOS and Android when using <code>skipPermissionRequests</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footer">MIT © React Native Community · This page is a formatted reference derived from the documented API.</p>
+  </div>
+</body>
+</html>

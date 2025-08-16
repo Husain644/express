@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);         // get the name of the direc
 const app = express()
 const forms = multer();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(forms.array());
+// app.use(forms.array());
 app.use(bodyParser.json())
 app.use('/static',express.static(path.join(__dirname, 'static')));  //static files  handling
 app.set('view engine', 'ejs');                                      //ejs engine

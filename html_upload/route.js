@@ -4,15 +4,15 @@ import fs from 'fs'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
-import { AddHtmlFile,getHtml,htmlFile,AllHtmlPage } from './controllers/control.js';
+import { AddHtmlFile,getHtml,htmlFile,AllHtmlPage,upload } from './controllers/control.js';
+
 
 const HtmlRouter =express.Router();
-
-HtmlRouter.use('/static',express.static(path.join(__dirname, './html_files'))); 
+HtmlRouter.use('/static',express.static(path.join(__dirname, 'controllers/comps'))); 
 HtmlRouter.get('/add',AddHtmlFile);
-HtmlRouter.get('/file/:fileName',htmlFile)
+HtmlRouter.get('/folderName/:folderName/file/:fileName',htmlFile)
 HtmlRouter.get('/all',AllHtmlPage)
-HtmlRouter.post('/gethtml',getHtml)
+HtmlRouter.post('/gethtml',upload.single('myFiles'),getHtml)
 
 
 export default HtmlRouter;
