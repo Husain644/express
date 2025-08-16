@@ -4,8 +4,6 @@ function GetData() {
     fetch('/html/allFilesApi')
         .then(response => response.json())
         .then(data => {
-
-
             data.allFiles.forEach(item => {
                 let p = document.createElement("p");
                 p.className = "links-p";
