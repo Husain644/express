@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vim Commands Cheat Sheet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: #f1f1f1;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #4fc3f7;
+    }
+    code {
+      background: #333;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #ffeb3b;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style-type: square;
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vim Commands Cheat Sheet</h1>
+
+  <div class="section">
+    <h2>Modes</h2>
+    <ul>
+      <li><code>i</code> – Insert before cursor</li>
+      <li><code>a</code> – Insert after cursor</li>
+      <li><code>o</code> – New line below</li>
+      <li><code>O</code> – New line above</li>
+      <li><code>v</code> – Visual mode</li>
+      <li><code>V</code> – Visual line</li>
+      <li><code>Ctrl+v</code> – Visual block</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>File Commands</h2>
+    <ul>
+      <li><code>:w</code> – Save file</li>
+      <li><code>:q</code> – Quit</li>
+      <li><code>:wq</code> – Save & Quit</li>
+      <li><code>:q!</code> – Quit without saving</li>
+      <li><code>:e filename</code> – Open file</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Navigation</h2>
+    <ul>
+      <li><code>h</code> – Left, <code>l</code> – Right</li>
+      <li><code>j</code> – Down, <code>k</code> – Up</li>
+      <li><code>0</code> – Beginning of line</li>
+      <li><code>$</code> – End of line</li>
+      <li><code>w</code> – Next word</li>
+      <li><code>b</code> – Previous word</li>
+      <li><code>gg</code> – Top of file</li>
+      <li><code>G</code> – Bottom of file</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Editing</h2>
+    <ul>
+      <li><code>x</code> – Delete character</li>
+      <li><code>dd</code> – Delete line</li>
+      <li><code>u</code> – Undo</li>
+      <li><code>Ctrl+r</code> – Redo</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Copy & Paste</h2>
+    <ul>
+      <li><code>yy</code> – Copy line</li>
+      <li><code>yw</code> – Copy word</li>
+      <li><code>p</code> – Paste after cursor</li>
+      <li><code>P</code> – Paste before cursor</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Search & Replace</h2>
+    <ul>
+      <li><code>/word</code> – Search forward</li>
+      <li><code>?word</code> – Search backward</li>
+      <li><code>n</code> – Repeat search</li>
+      <li><code>:%s/old/new/g</code> – Replace all</li>
+      <li><code>:%s/old/new/gc</code> – Replace with confirm</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Useful Tricks</h2>
+    <ul>
+      <li><code>.</code> – Repeat last command</li>
+      <li><code>>></code> – Indent line</li>
+      <li><code><<</code> – Unindent line</li>
+      <li><code>:set number</code> – Show line numbers</li>
+      <li><code>:syntax on</code> – Syntax highlighting</li>
+    </ul>
+  </div>
+
+</body>
+</html>

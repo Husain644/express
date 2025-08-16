@@ -11,7 +11,7 @@ function GetData() {
                 p.className = "links-p";
                 let a = document.createElement("a");
                 a.className = "links";
-                a.href = `/html/folderName/others/file/${item.fileName}`;
+                a.href = `/html/folderName/${item.catogary}/file/${item.fileName}`;
                 a.target = "_blank";
                 a.textContent = item.fileName;
                 p.appendChild(a);
