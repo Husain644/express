@@ -49,6 +49,7 @@ export function htmlFile(req,res){
     const filePath=path.join(__dirname, `../html_files/${folderName}/${fileName}`)
     res.sendFile(filePath)
 }
+
 function getAllFiles(dirPath, arrayOfFiles = []) {
     const files = fs.readdirSync(dirPath);
     files.forEach(file => {
@@ -63,22 +64,18 @@ function getAllFiles(dirPath, arrayOfFiles = []) {
 
     return arrayOfFiles;
 }
-export function AllHtmlPage(req,res){
+export function AllFilesApi(req,res){
+
       const folderPath=path.join(__dirname, `../html_files`)
       const files = getAllFiles(folderPath);
-      
-      let str=""
+      const lst =[];
       for (let filePath of files){
       if ( fs.statSync(filePath).isFile()){
         const fileName=path.basename(filePath);
         const catogary = path.basename(path.dirname(filePath));
-     str= str+`<p style="margin:0px"><a href="/html/folderName/${catogary}/file/${fileName}" target="_blank"
-      style="margin:5px;font-size:16px">File name is <span style="color:red;
-      font-size:20px;text-decoration:underline"> ${fileName}</span></a></p>`
+        lst.push({fileName,catogary});
       }}
-    res.send(`
-        <div style="width:100%;max-width:500px;background: linear-gradient(to right,#ccc,#fff,#000, #fff, blue);border-radius:10px;padding:10px;margin:auto">
-           ${str}
-        </div>
-        `)
+    res.json({
+        allFiles:lst
+    })
 }
