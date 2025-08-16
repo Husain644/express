@@ -99,6 +99,11 @@ option{
       margin: 0;
       background-color: aliceblue;
 }
+#options-input{
+    height: 15px;
+    display: inline;
+    position:absolute;
+}
 .viewLink{
     display: inline;
     position: absolute;
