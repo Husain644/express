@@ -19,6 +19,6 @@ app.set('views','./views')
 
 app.use('/',router) //Routings ###################  
  
-const port=8000;
+const port=8080;
 app.listen(port,console.log(`Example app listening on port ${port}`));
 dbConnect();
