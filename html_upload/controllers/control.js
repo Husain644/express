@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import axios from 'axios'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
@@ -79,4 +80,11 @@ export function AllFilesApi(req,res){
 export async function  uploadPic(req, res) {
      const result = await uploadToCloudinary(req=req,res=res);
      res.json({ result})
+}
+
+export async function  uploadHtml(req, res) {
+     const result = await uploadToCloudinary(req=req,res=res);
+    const response = await axios.get(result.url,{ responseType: "text" });
+    res.setHeader("Content-Type", "text/html");
+    res.send(response.data);
 }

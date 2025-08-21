@@ -14,17 +14,17 @@ cloudinary.config({
 });
  
 // upload on cloudinary memory based
-export async function uploadToCloudinary (req, res){ 
+export async function uploadToCloudinary (req, res,fileName = "mypage.html", folder = "express_uploads"
+){ 
   try {
      if (!req.file) return res.status(400).json({ error: "No file uploaded" });
       // Convert buffer into stream and upload to Cloudinary
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { 
-         folder: "express_uploads",
+         folder: folder,
          resource_type: "auto",
-         public_id: "mypage.html", // 👈 include extension in ID
-         overwrite: true,
+         public_id:fileName,
          },
         (error, result) => {
           if (error) reject(error);
