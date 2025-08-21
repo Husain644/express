@@ -22,7 +22,9 @@ export async function uploadToCloudinary (req, res){
       const uploadStream = cloudinary.uploader.upload_stream(
         { 
          folder: "express_uploads",
-         resource_type: "auto"
+         resource_type: "auto",
+         public_id: "mypage.html", // 👈 include extension in ID
+         overwrite: true,
          },
         (error, result) => {
           if (error) reject(error);
