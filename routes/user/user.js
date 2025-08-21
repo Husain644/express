@@ -5,7 +5,7 @@ const __filename = fileURLToPath(import.meta.url); // get the resolved path to t
 const __dirname = path.dirname(__filename);
 import { userGet,userPost,userDel,login } from '../../controllers/user/user.js';
 import { tokenVerify } from '../../middleware/middle.js';
-import uploadCloudinary from '../../utils/cloudinary.js'
+import uploadCloudinary from '../../utils/cloudinaryFunction.js'
 import uploadMulter from '../../middleware/multer.js';
 
 const userRouter=express.Router()

@@ -1,7 +1,11 @@
 import multer from 'multer'
 import fs from 'fs'
 import path from 'path'
-import uploadCloudinary from '../utils/cloudinary.js';
+import uploadCloudinary from '../utils/cloudinaryFunction.js';
+
+
+const storageMemory = multer.memoryStorage();
+export const upload = multer({ storageMemory }); // Store files in memory 
 
 const dir = './static/temp';
 
@@ -19,3 +23,4 @@ const storage = multer.diskStorage({
   
 const uploadMulter = multer({ storage: storage });
 export default uploadMulter;
+

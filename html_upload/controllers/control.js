@@ -1,23 +1,9 @@
-import express from 'express'
-import { v2 as cloudinary } from "cloudinary";
-import streamifier from "streamifier";
-import dotenv from "dotenv";
 import path from 'path'
-import multer from 'multer';
 import fs from 'fs'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
-dotenv.config(); // Load environment variables from .env file
-// Cloudinary Config
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
-
-const storage = multer.memoryStorage(); // store in memory
-export const upload = multer({ storage: storage });
+import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 
 export function AddHtmlFile (req,res){
     const filePath=path.join(__dirname, 'comps/add.html')
@@ -25,8 +11,6 @@ export function AddHtmlFile (req,res){
 }
 
  
-
-
 // ===== Route to save HTML + files =====
 export function getHtml(req, res) {
     const html = req.body.html
@@ -92,35 +76,7 @@ export function AllFilesApi(req,res){
     })
 }
 
-// upload on cloudinary 
-export async function uploadToCloudinary (req, res){ 
-  try {
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
-    // Convert buffer into stream and upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: "express_uploads",
-         resource_type: "auto"
-         },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-          
-        }
-      );
-      streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
-    });
-   const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUD_NAME}/${result.resource_type}/upload/fl_attachment:${req.file.originalname}/${result.public_id}`;
-    res.json({
-      message: "File uploaded successfully!",
-      url: result.secure_url,         // Normal view link
-      download_url: downloadUrl,      // Direct download link
-      public_id: result.public_id,
-      resource_type: result.resource_type,
-      format: result.format,
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+export async function  uploadPic(req, res) {
+     const result = await uploadToCloudinary(req=req,res=res);
+     res.json({ result})
 }
