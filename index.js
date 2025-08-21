@@ -21,8 +21,8 @@ app.set('view engine', 'ejs');                                      //ejs engine
 app.set('views','./views')
 app.use('/',router) //Routings ###################  
 
-server.listen(8080, () => {
-  console.log("HTTP + WebSocket running at http://localhost:8080");
+server.listen(443, () => {
+  console.log("HTTP + WebSocket running at http://localhost:443");
 });
 
 const wss = new WebSocketServer({ server }); // WebSocket server
