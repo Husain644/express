@@ -48,6 +48,29 @@
   <main class="container" role="main">
     <h1>Beautiful Gradient Background</h1>
     <p>This is a minimal HTML boilerplate with centered text and a smooth gradient background.</p>
+    <h2>Number is received from WebSocket
+      <h1 style="color:rgb(203, 40, 40);min-width: 50px;" id="from-socket"></h1>
+    </h2>
   </main>
+     
 </body>
+<script>
+  const element = document.getElementById("from-socket");
+
+  const socket = new WebSocket("ws://localhost:8080");
+
+  socket.onopen = () => {
+    console.log("Connected to server");
+  };
+
+  socket.onmessage = (event) => {
+    // console.log("Received:", event.data);
+      element.textContent = event.data;
+  };
+
+  socket.onclose = () => {
+    console.log("Connection closed");
+  };
+</script>
+
 </html>

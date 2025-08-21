@@ -83,8 +83,9 @@ export async function  uploadPic(req, res) {
 }
 
 export async function  uploadHtml(req, res) {
-     const result = await uploadToCloudinary(req=req,res=res);
+    const result = await uploadToCloudinary(req=req,res=res);
     const response = await axios.get(result.url,{ responseType: "text" });
     res.setHeader("Content-Type", "text/html");
     res.send(response.data);
 }
+// streamming 
