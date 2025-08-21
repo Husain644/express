@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url); // get the resolved path to t
 const __dirname = path.dirname(__filename);         // get the name of the directory
 
 const app = express()
-const forms = multer();
+// const forms = multer();
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(forms.array());
 app.use(bodyParser.json())

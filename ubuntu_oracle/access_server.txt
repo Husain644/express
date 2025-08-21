@@ -6,4 +6,4 @@ ipv4address=161.118.171.56
 
 in git or powershell enter
 
-ssh -i "E:\NodeBackend\express\ubuntu_oracle\ssh-key-instance1-privet.key" ubuntu@80.225.236.199
+ssh -i "E:\NodeBackend\express\ubuntu_oracle\ssh-key-privet.key" ubuntu@140.238.167.215
