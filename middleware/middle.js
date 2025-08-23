@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken'
 
 const tokenVerify=async(req,res,next)=>{
-    const token=req.headers.authorization.split(' ').pop()
+    console.log( 'token is ',req.headers.authorization)
+    const token=req.headers.authorization?.split(' ').pop()
+    if (!token){
+        return res.status(401).send({"messages":"please provide token"})
+    }
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         if(decoded){
@@ -10,7 +14,7 @@ const tokenVerify=async(req,res,next)=>{
             next()
         }
         else{
-            res.status(401).send({"messages":"please provide token"})
+            res.status(401).send({"messages":"please provide valid  token"})
         }
     } catch (error) {
         res.send(error)
