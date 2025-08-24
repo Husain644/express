@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="static/css/common.css" />
+  <title>Document</title>
+</head>
+
+<body>
+    <%- include('../partial/header/header.ejs') %>
+  <% const page='About' %>
+  <h2>This is <%= page %> page</h2>
+  <h3>My Name is <%= name %></h3>
+  <% for(let i=1;i <=3;i++){ %>
+  <h3>Number is <%= i %></h3>
+  <% } %>
+  <h4 style="color: #3321d8">
+    <% if(false){ %> true after if condition <% } else{ %> false after if
+    consitions <% } %>
+  </h4>
+
+  <script src="static/js/common.js"></script>
+</body>
+
+</html>

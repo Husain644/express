@@ -6,6 +6,34 @@ const __filename = fileURLToPath(import.meta.url); // get the resolved path to t
 const __dirname = path.dirname(__filename)
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 
+
+export async function getAllCategories(req,res){
+    if(req.params.folderName){
+        const folderName=req.params.folderName
+        const folderPath=path.join(__dirname, `../html_files/${folderName}`)
+        if (!fs.existsSync(folderPath)) {
+            return res.status(404).json({ message: 'Folder not found' });
+        }
+        const  Files = fs.readdirSync(folderPath).filter(file => {
+            return fs.statSync(path.join(folderPath, file)).isFile();
+        }); 
+          const  Folder = fs.readdirSync(folderPath).filter(file => {
+            return fs.statSync(path.join(folderPath, file)).isDirectory();
+        }); 
+        return res.json({
+            folderContent:{file:Files,subFolder:Folder},
+            folderName:folderName
+        })
+    }
+    const folderPath=path.join(__dirname, `../html_files`)
+    const categories = fs.readdirSync(folderPath).filter(file => {
+        return fs.statSync(path.join(folderPath, file)).isDirectory();
+    });
+    res.json({
+        allCategories:categories
+    })
+}
+
 export function AddHtmlFile (req,res){
     const filePath=path.join(__dirname, 'comps/add.html')
     res.sendFile(filePath);
@@ -17,8 +45,9 @@ export function getHtml(req, res) {
     const html = req.body.html
     const fileName = req.body.fileName 
     const category = req.body.category 
+    const subCategory = req.body.subCategory || '';
 
-    const folderPath = path.join(__dirname, '../html_files', category);
+    const folderPath = path.join(__dirname, '../html_files', category, subCategory);
     if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath, { recursive: true });}
     if(req.file){
