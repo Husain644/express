@@ -8,6 +8,6 @@ const router= express.Router();
 router.use('/account',userRouter);
 router.use('/html',HtmlRouter);
 router.use('/usage',usege);
-// router.use('/',NotFound);
+router.use('/',NotFound);
 
 export default router;
