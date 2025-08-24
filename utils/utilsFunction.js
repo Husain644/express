@@ -17,7 +17,7 @@ const execAsync = util.promisify(exec);
  */
 export function usege(req, res) {
   getSystemUsage()
-    .then(usage => res.json(usage))
+    .then(result => res.json(result))
     .catch(err => res.status(500).json({ error: err.message }));
 }
 async function getSystemUsage() {
