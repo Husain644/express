@@ -82,18 +82,38 @@ export function FolderDetails(pathString){
 
 }
 
-export function FolderDetailsInObject(pathString){
-        const allFiles = FolderDetails(pathString);
-        const fileObj = {};
-        allFiles.forEach(({fileName, catogary}) => {
-            if (!fileObj[catogary]) {
-                fileObj[catogary] = [];
-            }
-            fileObj[catogary].push(fileName);
-        });
-        const lst=[]
-        for (let key in fileObj) {
-            lst.push({folderName:key,files:fileObj[key]})
-        }
-        return lst;
+export function FolderDetailsInObject(folderPath) {
+  const result = [];
+
+  // Get files in the current folder
+  const currentFiles = [];
+  const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+
+  entries.forEach(entry => {
+    if (entry.isFile()) {
+      currentFiles.push(entry.name);
+    }
+  });
+
+  result.push({
+    folderName: path.basename(folderPath),
+    files: currentFiles
+  });
+
+  // Now check subfolders
+  entries.forEach(entry => {
+    if (entry.isDirectory()) {
+      const subFolderPath = path.join(folderPath, entry.name);
+      const subFiles = fs.readdirSync(subFolderPath, { withFileTypes: true })
+        .filter(sub => sub.isFile())
+        .map(sub => sub.name);
+
+      result.push({
+        folderName: entry.name,
+        files: subFiles
+      });
+    }
+  });
+
+  return result;
 }
