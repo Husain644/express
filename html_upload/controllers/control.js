@@ -16,7 +16,7 @@ export async function getAllCategories(req, res) {
        
         if (fs.existsSync(folderPath)) {
             const details = FolderDetailsInObject(folderPath);
-            return res.json({ data: details,folderPath });
+            return res.json({ data: details,"folderPath is":folderPath });
         }
 
         return res.status(404).json({
