@@ -13,10 +13,10 @@ export async function getAllCategories(req, res) {
     if (req.params.folderName) {
         const folderName = req.params.folderName;
         const folderPath = path.join(__dirname, "../html_files", folderName);
-
+       
         if (fs.existsSync(folderPath)) {
             const details = FolderDetailsInObject(folderPath);
-            return res.json({ data: details });
+            return res.json({ data: details,folderPath });
         }
 
         return res.status(404).json({

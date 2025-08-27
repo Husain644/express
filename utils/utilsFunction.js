@@ -67,8 +67,6 @@ export function FolderDetails(pathString){
     });
     return arrayOfFiles;
 }
-
-
       const folderPath=pathString
       const files = getAllFiles(folderPath);
       const lst =[];
