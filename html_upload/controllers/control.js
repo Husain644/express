@@ -141,3 +141,9 @@ export async function uploadHtml(req, res) {
     res.send(response.data);
 }
 // streamming 
+export function getReactFile(req, res) {
+    const folderName = 'view'
+    const filePath = path.join(__dirname, `/static/staticreact/${folderName}/index.html`)
+    if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath }); }
+    res.sendFile(filePath)
+}
