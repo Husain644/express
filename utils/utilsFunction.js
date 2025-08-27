@@ -48,3 +48,49 @@ async function getSystemUsage() {
     throw new Error("Failed to get disk usage");
   }
 }
+import path from 'path';
+import fs from 'fs';
+
+export function FolderDetails(pathString){
+
+    function getAllFiles(dirPath, arrayOfFiles = []) {
+        const files = fs.readdirSync(dirPath);
+        files.forEach(file => {
+            const filePath = path.join(dirPath, file);
+            if (fs.statSync(filePath).isDirectory()) {
+                // Recursively read sub-folder
+                getAllFiles(filePath, arrayOfFiles);
+            } else {
+                arrayOfFiles.push(filePath);
+            }
+        });
+    
+        return arrayOfFiles;
+    }
+      const folderPath=pathString
+      const files = getAllFiles(folderPath);
+      const lst =[];
+      for (let filePath of files){
+      if ( fs.statSync(filePath).isFile()){
+        const fileName=path.basename(filePath);
+        const catogary = path.basename(path.dirname(filePath));
+        lst.push({fileName,catogary});
+      }}
+    return lst;
+}
+
+export function FolderDetailsInObject(pathString){
+        const allFiles = FolderDetails(pathString);
+        const fileObj = {};
+        allFiles.forEach(({fileName, catogary}) => {
+            if (!fileObj[catogary]) {
+                fileObj[catogary] = [];
+            }
+            fileObj[catogary].push(fileName);
+        });
+        const lst=[]
+        for (let key in fileObj) {
+            lst.push({folderName:key,files:fileObj[key]})
+        }
+        return lst;
+}

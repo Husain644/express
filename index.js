@@ -7,6 +7,7 @@ import dbConnect from './utils/db/db.js';
 import router from './routes/main.js';
 import bodyParser from 'body-parser'
 import { fileURLToPath } from 'url';
+import cors from 'cors'
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename);         // get the name of the directory
 import { limiter } from './utils/utilsFunction.js';
@@ -14,6 +15,7 @@ import { limiter } from './utils/utilsFunction.js';
 const app = express()
 const server = createServer(app); // create raw HTTP server
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors())  //cors policy
 app.use(limiter) // rate limiter
 app.use(bodyParser.json())
 app.use('/static',express.static(path.join(__dirname, 'static')));  //static files  handling

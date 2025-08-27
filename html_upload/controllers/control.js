@@ -4,25 +4,24 @@ import axios from 'axios'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
+import { FolderDetails,FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
+import { error } from 'console';
 
 
 export async function getAllCategories(req,res){
     if(req.params.folderName){
         const folderName=req.params.folderName
         const folderPath=path.join(__dirname, `../html_files/${folderName}`)
-        if (!fs.existsSync(folderPath)) {
-            return res.status(404).json({ message: 'Folder not found' });
-        }
-        const  Files = fs.readdirSync(folderPath).filter(file => {
-            return fs.statSync(path.join(folderPath, file)).isFile();
-        }); 
-          const  Folder = fs.readdirSync(folderPath).filter(file => {
-            return fs.statSync(path.join(folderPath, file)).isDirectory();
-        }); 
+        if (fs.existsSync(folderPath)) {
+        const details = FolderDetailsInObject(folderPath);
         return res.json({
-            folderContent:{file:Files,subFolder:Folder},
-            folderName:folderName
+            data:details,
+        })
+        }
+        return res.status(404).json({
+            data:[],
+            error:'Folder not found'
         })
     }
     const folderPath=path.join(__dirname, `../html_files`)
@@ -67,7 +66,24 @@ export function getHtml(req, res) {
     })}
 }
 
-
+export function getFile(req,res){
+    const fileName=req.params.fileName
+    const folderName=req.params.folderName 
+    const subFolder=req.params.subFolder
+    const filePath=path.join(__dirname, `../html_files/${folderName}/${subFolder}/${fileName}`)
+    if(folderName===subFolder){
+    const newFilePath=path.join(__dirname, `../html_files/${folderName}/${fileName}`)
+    if (!fs.existsSync(newFilePath)) {return res.status(404).json({ error: 'File not found in same folder',
+        newFilePath
+     });}
+        res.sendFile(newFilePath)
+    }
+    else{
+        
+    if (!fs.existsSync(filePath)) {return res.status(404).json({ error: 'File not found',filePath });}
+    res.sendFile(filePath)
+    }
+}
 
 export function htmlFile(req,res){
     const fileName=req.params.fileName
