@@ -15,8 +15,8 @@ HtmlRouter.use("/view", express.static(reactBuildPath)); // Serve static files f
 HtmlRouter.get('/allFilesApi',AllFilesApi) // get all files with catogary
 HtmlRouter.get('/categories',getAllCategories) // get all categories
 HtmlRouter.get('/categories/:folderName',getAllCategories)  // get specific category details with files
-HtmlRouter.post('/gethtml',upload.single('myFiles'),getHtml)// save html + files  Save Data
-HtmlRouter.get('/getFile/:folderName/:subFolder/:fileName',getFile)
+HtmlRouter.post('/gethtml',upload.single('myFiles'),getHtml)// save html + files  Save Data  // ===== Route to save HTML + files =====
+HtmlRouter.get('/getFile/:folderName/:subFolder/:fileName',getFile) // get specific html file
 
 
 HtmlRouter.get("/view/*", (req, res) => {

@@ -36,13 +36,15 @@ export async function getAllCategories(req, res) {   /// get all categories or d
 
 // ===== Route to save HTML + files =====
 export function getHtml(req, res) {
-    const html = req.body.html
-    const fileName = req.body.fileName
-    const category = req.body.category
-    const subCategory = req.body.subFolder || '';
+const { html, fileName, category, subFolder } = req.body;
+const folderPath = path.join( SavedContent, 'all_files', category, subFolder )
+ 
+
     try {
-        
-    const folderPath = path.join(SavedContent, 'all_files', category, subCategory);
+       if ( !category) {
+  return res.status(400).json({ error: "Missing required fields" });
+} 
+
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
     }
