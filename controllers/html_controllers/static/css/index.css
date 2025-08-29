@@ -1,0 +1,172 @@
+body{
+    padding: 0;
+    margin: 0;
+    background-color: aliceblue;
+}
+h3 {
+        background-color: aquamarine;
+        border-width:5px;
+        border-color: black;
+        margin: 0;
+        text-align: center;
+        font-size: 40px;
+    }
+    h4{
+        color:#fff;
+        background-color: #999;
+        margin: 0;
+        font-weight: 400;
+        margin-bottom:1px;
+        text-align: center;
+        font-size:25px;
+    }
+    .textareaWrapper{
+        width:100%;
+        background-color: burlywood;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    textarea{
+        width:90%;
+        margin: auto;
+        min-height: 350px;
+        min-width:350px;
+        padding: 10px;
+  
+    }
+    .btnwrapper{
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin: auto;
+        padding: 30px;
+        background-color: rgb(203, 240, 223);
+    }
+    button{
+        min-width:100px; 
+        font-size: 20px;
+        background-color: blue;
+        color: #fff;
+        border-radius: 10px;
+    }
+    #filename{
+   padding: 10px;
+   min-width: 300px;
+   border-radius: 10px;
+   margin: 10px;
+    }
+    .textareaWrapperInner{
+        display: flex;
+        flex-direction: row;
+        width:98%;
+
+    }
+    #preview{
+      height:350px;
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+      border-width: 1px;
+      margin-left: 5px;
+     
+}
+#myIframe{
+    max-width: 98%;
+    flex: 1;
+}
+.prev-heading{
+    font-size: 14px;
+    width:90%;
+    text-align: center;
+    font-style: italic;
+    margin: 0; 
+}
+/* Dropdown container */
+.dropdown {
+   display: inline;
+   border-radius: 10px;
+}
+#myDropdown {
+      padding:2px;
+      border-radius: 5px;
+       font-size:12px;
+       cursor: pointer;
+    }
+option{
+      font-size:12px;
+      margin: 0;
+      background-color: aliceblue;
+}
+#myFilesId{
+    cursor: pointer;
+}
+#options-input{
+    height: 15px;
+    display: inline;
+    position:absolute;
+}
+.viewLink{
+    display: inline;
+    position: absolute;
+    right:5px;
+    top:20px;
+    background-color: #fff;
+    padding: 2px 10px;
+    border-radius: 5px;
+}
+.viewLink a{
+    color:blue;
+    font-style: italic;
+    font-weight: 600;
+}
+/* responsive web */
+@media (max-width:1024px) {
+    h3{
+        font-size: 25px;
+    }
+   .textareaWrapperInner{
+        display: flex;
+        flex-direction: column;
+    }
+      textarea{
+        width: 95%;
+      }
+     #preview{
+        width: 98%;
+     }
+}
+
+/* view page css */
+.header{
+    height: 80px;
+    background-color: rgb(198, 175, 158);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0px 20px;  
+}
+.link-container{
+    background-color: rgb(195, 233, 233);
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    flex-wrap: wrap;
+    gap:5px;
+}
+.links-p{
+    background-color:#fff;
+  
+    padding:2px 10px; 
+    border-radius: 5px;
+    margin: 5px;
+    max-width: 150px;
+    height:16px;
+    overflow: hidden;
+}
+.links{
+    color: #1d1dfb;
+     font-size: 15px;
+}
