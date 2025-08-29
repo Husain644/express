@@ -19,7 +19,7 @@
         <input id="filename" placeholder="enter file name with extension" />
         <div class="dropdown">
           <select id="myDropdown">
-            <option value="others">- Select -</option>
+            <option value="others">- Select folderName -</option>
             <option value="react">React js</option>
             <option value="react-native">React Native</option>
             <option value="express">Express</option>
@@ -27,6 +27,7 @@
             <option value="tools">Tolls,like,git,linux,vscode</option>
           </select>
         </div>
+        <input type="text" placeholder="enter sub folderName" id="subFolder" />  
         <input type="file" id="myFilesId" name="myFiles"  accept="*/*">
       </div>
       <div class="textareaWrapperInner">
@@ -56,6 +57,7 @@ async function sendData() {
   const fileName = document.getElementById("filename").value;
   const textValue = document.getElementById("myTextarea").value;
   const category = document.getElementById("myDropdown").value;
+  const subFolder = document.getElementById("subFolder").value;
   const myFiles = document.getElementById("myFilesId").files;
 
   // if (fileName === '' | textValue === '' || myFiles.length < 1) {
@@ -68,7 +70,8 @@ async function sendData() {
   formData.append("fileName", fileName);
   formData.append("html", textValue);
   formData.append("category", category);
-   formData.append("myFiles", myFiles)
+  formData.append("subFolder", subFolder);
+  formData.append("myFiles", myFiles)
 
   // Append each file
   for (let i = 0; i < myFiles.length; i++) {

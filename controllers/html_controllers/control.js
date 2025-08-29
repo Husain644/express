@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename)
 import {  FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 
-const SavedContent='../../../savedcontent'
+const SavedContent='./../savedcontent'
 
 export async function getAllCategories(req, res) {   /// get all categories or details of a specific category and send  to frontend
     if (req.params.folderName) {
@@ -44,7 +44,7 @@ export function getHtml(req, res) {
     const html = req.body.html
     const fileName = req.body.fileName
     const category = req.body.category
-    const subCategory = req.body.subCategory || '';
+    const subCategory = req.body.subFolder || '';
     try {
         
     const folderPath = path.join(SavedContent, 'all_files', category, subCategory);
