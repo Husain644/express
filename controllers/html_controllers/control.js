@@ -7,8 +7,8 @@ const __dirname = path.dirname(__filename)
 import {  FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 
-const SavedContent=`E:/NodeBackend/savedcontent`
-// const SavedContent=`/var/www/savedcontent`  // for linux server
+// const SavedContent=`E:/NodeBackend/savedcontent`
+const SavedContent=`/var/www/savedcontent`  // for linux server
 
 export async function getAllCategories(req, res) {   /// get all categories or details of a specific category and send  to frontend
     if (req.params.folderName) {
