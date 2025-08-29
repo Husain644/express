@@ -7,7 +7,8 @@ const __dirname = path.dirname(__filename)
 import {  FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 
-const SavedContent='./../savedcontent'
+const SavedContent=`E:/NodeBackend/savedcontent`
+// const SavedContent=`/var/www/savedcontent`  // for linux server
 
 export async function getAllCategories(req, res) {   /// get all categories or details of a specific category and send  to frontend
     if (req.params.folderName) {
@@ -32,12 +33,6 @@ export async function getAllCategories(req, res) {   /// get all categories or d
         allCategories: categories
     })
 }
-
-export function AddHtmlFile(req, res) {
-    const filePath = path.join(__dirname, 'static/add.html')
-    res.sendFile(filePath);
-}
-
 
 // ===== Route to save HTML + files =====
 export function getHtml(req, res) {
@@ -96,12 +91,6 @@ export function getFile(req, res) {
     }
 }
 
-export function htmlFile(req, res) {
-    const fileName = req.params.fileName
-    const folderName = req.params.folderName
-    const filePath = path.join(SavedContent, `all_files/${folderName}/${fileName}`)
-    res.sendFile(filePath)
-}
 
 function getAllFiles(dirPath, arrayOfFiles = []) {
     const files = fs.readdirSync(dirPath);

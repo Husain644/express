@@ -94,7 +94,8 @@ async function sendData() {
     document.getElementById("responseText").innerHTML =
       data.msg
         ? `<h4>${data.msg}</h4>`
-        : `<a href="/html/folderName/${folderName}/file/${file}" target="_blank">See Preview</a>` || `<p>No Response</p>`;
+        : `<a href="/html/getFile/${folderName}/${subFolder}/${file}"
+         target="_blank">See Preview</a>` || `<p>No Response</p>`;
   } catch (error) {
     document.getElementById("responseText").innerText = "Error: " + error.message;
   }
