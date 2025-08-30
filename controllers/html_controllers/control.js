@@ -114,16 +114,20 @@ function getAllFiles(dirPath, arrayOfFiles = []) {
     return arrayOfFiles;
 }
 export function AllFilesApi(req, res) {
-
     const folderPath = path.join(SavedContent, `all_files`)
     const files = getAllFiles(folderPath);
     const lst = [];
     for (let filePath of files) {
         if (fs.statSync(filePath).isFile()) {
             const fileName = path.basename(filePath);
-            const catogary = path.basename(path.dirname(filePath));
-            lst.push({ fileName, catogary });
-        }
+            const folderName = path.basename(path.dirname(path.dirname(filePath)));
+            const subFolder = path.basename(path.dirname(filePath));
+            if (folderName === "all_files") {
+               const fileUrl = `/html/getFile/${subFolder}/${subFolder}/${fileName}`;
+                lst.push({ fileName,fileUrl});// Add subFolder to the response
+            }else{  const fileUrl = `/html/getFile/${folderName}/${subFolder}/${fileName}`;
+            lst.push({ fileName,fileUrl});
+        }}
     }
     res.json({
         allFiles: lst
