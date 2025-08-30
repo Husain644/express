@@ -4,7 +4,7 @@ import { upload } from '../../middleware/multer.js';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
-import {getHtml,AllFilesApi,uploadPic,uploadHtml,getAllCategories,getFile,getReactFile
+import {AllFilesApi,uploadPic,uploadHtml,getAllCategories,getFile,SaveData
 } from '../../controllers/html_controllers/control.js';
 
 const reactBuildPath = path.join(__dirname,"../../controllers/html_controllers/","static/reactBuild/view")
@@ -15,7 +15,7 @@ HtmlRouter.use("/view", express.static(reactBuildPath)); // Serve static files f
 HtmlRouter.get('/allFilesApi',AllFilesApi) // get all files with catogary
 HtmlRouter.get('/categories',getAllCategories) // get all categories
 HtmlRouter.get('/categories/:folderName',getAllCategories)  // get specific category details with files
-HtmlRouter.post('/gethtml',upload.single('myFiles'),getHtml)// save html + files  Save Data  // ===== Route to save HTML + files =====
+HtmlRouter.post('/gethtml',upload.single('myFiles'),SaveData)// save html + files  Save Data  // ===== Route to save HTML + files =====
 HtmlRouter.get('/getFile/:folderName/:subFolder/:fileName',getFile) // get specific html file
 
 

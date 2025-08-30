@@ -7,8 +7,7 @@ const __dirname = path.dirname(__filename)
 import {  FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 
-// const SavedContent=`E:/NodeBackend/savedcontent`
-const SavedContent=`/var/www/savedcontent`  // for linux server
+const SavedContent = path.join(__dirname, "../../../savedcontent");  // for linux server
 
 export async function getAllCategories(req, res) {   /// get all categories or details of a specific category and send  to frontend
     if (req.params.folderName) {
@@ -35,15 +34,19 @@ export async function getAllCategories(req, res) {   /// get all categories or d
 }
 
 // ===== Route to save HTML + files =====
-export function getHtml(req, res) {
-const { html, fileName, category, subFolder } = req.body;
-const folderPath = path.join( SavedContent, 'all_files', category, subFolder )
- 
+export function SaveData(req, res) {
+    const fileName = req.body.fileName
+    const folderName = req.body.folderName
+    const subFolder = req.body.subFolder
+    const textData = req.body.textData
+           if ( !folderName) {
+          return res.status(400).json({ error: "Missing required fields","folderName":folderName });
+            } 
+    
+         const folderPath = path.join( SavedContent, 'all_files', folderName, subFolder )
 
     try {
-       if ( !category) {
-  return res.status(400).json({ error: "Missing required fields" });
-} 
+
 
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
@@ -52,20 +55,22 @@ const folderPath = path.join( SavedContent, 'all_files', category, subFolder )
         const myFilesPath = path.join(folderPath, req.file.originalname);
         fs.writeFileSync(myFilesPath, req.file.buffer);
         res.send({
-            folderName: category, uploadedFiles: req.file.originalname
+            folderName: folderName, uploadedFiles: req.file.originalname
         });
     } else {
         const filePath = path.join(folderPath, `${fileName}`);
         if (fs.existsSync(filePath)) {
             return res.send({ reply: '', msg: 'File already exists. Try a different name.' });
         }
-        fs.writeFileSync(filePath, html, 'utf8');
+        fs.writeFileSync(filePath, textData, 'utf8');
         res.send({
             fileName,
-            folderName: category,
+            folderName:folderName,
         })
     }
-    } catch (error) {
+    
+
+} catch (error) {
         res.status(500).send({ reply: '', msg: error.message || 'Error saving file' });
     }
 
