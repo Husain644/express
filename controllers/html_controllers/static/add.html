@@ -68,10 +68,10 @@ async function sendData() {
   // ✅ Use FormData instead of JSON
   const formData = new FormData();
   formData.append("fileName", fileName);
-  formData.append("html", textValue);
-  formData.append("category", category);
+  formData.append("textData", textValue);
+  formData.append("folderName", category);
   formData.append("subFolder", subFolder);
-  formData.append("myFiles", myFiles)
+  formData.append("myFiles", myFiles);
 
   // Append each file
   for (let i = 0; i < myFiles.length; i++) {
