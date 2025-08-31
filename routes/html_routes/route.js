@@ -26,5 +26,4 @@ HtmlRouter.get("/view/*", (req, res) => {
 HtmlRouter.post('/tocloudinary',upload.single('myFiles'),uploadPic)
 HtmlRouter.post('/uploadHtml',upload.single('myFiles'),uploadHtml)
 
-
 export default HtmlRouter;

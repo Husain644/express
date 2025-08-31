@@ -37,34 +37,30 @@ export function SaveData(req, res) {
     const folderName = req.body.folderName
     const subFolder = req.body.subFolder
     const textData = req.body.textData
-           if ( !folderName) {
-          return res.status(400).json({ error: "Missing required fields","folderName":folderName });
-            } 
-    
-         const folderPath = path.join( SavedContent, 'all_files', folderName, subFolder )
 
+    if ( !folderName) {return res.status(400).json({error: "Missing required fields" })}; 
+    const folderPath = path.join( SavedContent, 'all_files', folderName, subFolder )
     try {
-
-
-    if (!fs.existsSync(folderPath)) {
-        fs.mkdirSync(folderPath, { recursive: true });
-    }
+    if (!fs.existsSync(folderPath)) {fs.mkdirSync(folderPath, { recursive: true });}
     if (req.file) {
+        try {
         const myFilesPath = path.join(folderPath, req.file.originalname);
         fs.writeFileSync(myFilesPath, req.file.buffer);
-        res.send({
-            folderName: folderName, uploadedFiles: req.file.originalname
+        res.send({folderName: folderName, uploadedFiles: req.file.originalname,
+            path:`/html/getFile/${folderName}/${subFolder}/${req.file.originalname}`
         });
+        } catch (error) {
+         res.status(500).send({ reply: '', msg: error.message || 'Error saving file' });
+        }
+ 
     } else {
+        
         const filePath = path.join(folderPath, `${fileName}`);
         if (fs.existsSync(filePath)) {
             return res.send({ reply: '', msg: 'File already exists. Try a different name.' });
         }
         fs.writeFileSync(filePath, textData, 'utf8');
-        res.send({
-            fileName,
-            folderName:folderName,
-        })
+        res.send({ path:`/html/getFile/${folderName}/${subFolder}/${fileName}`})
     }
 } catch (error) {
         res.status(500).send({ reply: '', msg: error.message || 'Error saving file' });

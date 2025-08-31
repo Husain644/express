@@ -71,12 +71,12 @@ async function sendData() {
   formData.append("textData", textValue);
   formData.append("folderName", category);
   formData.append("subFolder", subFolder);
-  formData.append("myFiles", myFiles);
-
-  // Append each file
-  for (let i = 0; i < myFiles.length; i++) {
-    formData.append("myFiles", myFiles[i]); // "myFiles" matches multer field name
-  }
+  formData.append("myFiles", myFiles[0]);
+  console.log(myFiles[0])
+  // // Append each file
+  // for (let i = 0; i < myFiles.length; i++) {
+  //   formData.append("myFiles", myFiles[i]); // "myFiles" matches multer field name
+  // }
 
   try {
     const response = await fetch("/html/gethtml", {
@@ -89,12 +89,10 @@ async function sendData() {
     }
 
     const data = await response.json();
-    const file = data.fileName;
-    const folderName = data.folderName;
     document.getElementById("responseText").innerHTML =
       data.msg
         ? `<h4>${data.msg}</h4>`
-        : `<a href="/html/getFile/${folderName}/${subFolder}/${file}"
+        : `<a href="${data.path}"
          target="_blank">See Preview</a>` || `<p>No Response</p>`;
   } catch (error) {
     document.getElementById("responseText").innerText = "Error: " + error.message;
