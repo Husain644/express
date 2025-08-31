@@ -19,12 +19,6 @@
         <input id="filename" placeholder="enter file name with extension" />
         <div class="dropdown">
           <select id="myDropdown">
-            <option value="others">- Select folderName -</option>
-            <option value="react">React js</option>
-            <option value="react-native">React Native</option>
-            <option value="express">Express</option>
-            <option value="server">Server and cloud</option>
-            <option value="tools">Tolls,like,git,linux,vscode</option>
           </select>
         </div>
         <input type="text" placeholder="enter sub folderName" id="subFolder" />  
@@ -53,6 +47,20 @@
 </body>
 
 <script>
+async function getCatogery(){
+  fetch('/html//categories').then(async (resp)=>{
+    const data = await resp.json();
+    const elm=document.getElementById("myDropdown")
+    data.allCategories.forEach((item)=>{
+      let s=document.createElement("option");
+      s.value=item;
+      s.innerText=item;
+      elm.appendChild(s)
+    })
+
+  }).catch((error)=>{})
+}
+getCatogery();
 async function sendData() {
   const fileName = document.getElementById("filename").value;
   const textValue = document.getElementById("myTextarea").value;
@@ -72,7 +80,7 @@ async function sendData() {
   formData.append("folderName", category);
   formData.append("subFolder", subFolder);
   formData.append("myFiles", myFiles[0]);
-  console.log(myFiles[0])
+
   // // Append each file
   // for (let i = 0; i < myFiles.length; i++) {
   //   formData.append("myFiles", myFiles[i]); // "myFiles" matches multer field name
