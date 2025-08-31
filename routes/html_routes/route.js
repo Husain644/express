@@ -17,7 +17,7 @@ HtmlRouter.get('/categories',getAllCategories) // get all categories
 HtmlRouter.get('/categories/:folderName',getAllCategories)  // get specific category details with files
 HtmlRouter.post('/gethtml',upload.single('myFiles'),SaveData)// save html + files  Save Data  // ===== Route to save HTML + files =====
 HtmlRouter.get('/getFile/:folderName/:subFolder/:fileName',getFile) // get specific html file
-
+HtmlRouter.delete('/deleteFile/:folderName/:subFolder/:fileName',getFile) // delete specific html file
 
 HtmlRouter.get("/view/*", (req, res) => {
   res.sendFile(path.join(reactBuildPath, "index.html"));

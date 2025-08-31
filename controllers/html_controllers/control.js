@@ -13,12 +13,10 @@ export async function getAllCategories(req, res) {   /// get all categories or d
     if (req.params.folderName) {
         const folderName = req.params.folderName;
         const folderPath = path.join(SavedContent, "all_files", folderName);
-       
         if (fs.existsSync(folderPath)) {
             const details = FolderDetailsInObject(folderPath);
             return res.json({ data: details,"folderPath is":folderPath });
         }
-
         return res.status(404).json({
             data: [],
             error: "Folder not found"
@@ -68,31 +66,41 @@ export function SaveData(req, res) {
             folderName:folderName,
         })
     }
-    
-
 } catch (error) {
         res.status(500).send({ reply: '', msg: error.message || 'Error saving file' });
     }
-
 }
 
 export function getFile(req, res) {
-    const fileName = req.params.fileName
+    const fileName = req.params.fileName 
     const folderName = req.params.folderName
     const subFolder = req.params.subFolder
-    const filePath = path.join(SavedContent, `all_files/${folderName}/${subFolder}/${fileName}`)
-    if (folderName === subFolder) {
-        const newFilePath = path.join(SavedContent, `all_files/${folderName}/${fileName}`)
-        if (!fs.existsSync(newFilePath)) {
-            return res.status(404).json({
-                error: 'File not found in same folder',
-                newFilePath
-            });
+
+    let folderPath=path.join(SavedContent,`all_files/${folderName}`)
+    folderName === subFolder?folderPath=folderPath:folderPath=path.join(SavedContent,`all_files/${folderName}/${subFolder}`)
+    let filePath=path.join(SavedContent, `all_files/${subFolder}/${fileName}`);
+    folderName === subFolder ? filePath = filePath : 
+    filePath = path.join(SavedContent, `all_files/${folderName}/${subFolder}/${fileName}`)
+
+    if (req.method === "DELETE") { 
+        console.log('delete call ', filePath)
+        if(fileName==="deleteFolder"){
+                if (!fs.existsSync(folderPath)) { return res.status(404).json({ error: 'folder not found'}); }
+                 fs.rm(folderPath,{ recursive: true, force: true },(err)=>{
+                    if(err){  return res.status(404).json({error:err})}
+                    else{
+                        return res.json({ message: 'Folder deleted successfully' })
+                    }
+                    
+                 })
         }
-        res.sendFile(newFilePath)
+       else{
+        if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath}); }
+        fs.unlinkSync(filePath);
+        return res.json({ message: 'File deleted successfully' });
+       }
     }
     else {
-
         if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath }); }
         res.sendFile(filePath)
     }
@@ -114,6 +122,7 @@ function getAllFiles(dirPath, arrayOfFiles = []) {
     return arrayOfFiles;
 }
 export function AllFilesApi(req, res) {
+
     const folderPath = path.join(SavedContent, `all_files`)
     const files = getAllFiles(folderPath);
     const lst = [];

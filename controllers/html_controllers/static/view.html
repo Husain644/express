@@ -11,10 +11,10 @@
 <body>
 <div class="header">
   <p>all links</p>
-  <div>
+  <div style="display: none;">
     <input placeholder="search"/>
     <div >
-        <ul style="display: none;">
+        <ul >
             <li>hell1</li>
             <li>hell1</li>
             <li>hell1</li>
@@ -23,9 +23,17 @@
         </ul>
     </div>
   </div>
-</div>
+  <a style="padding:5px;font-weight: 600;" href="/html/view">
+    viewInReact
+  </a>
+<a  style="padding:5px;font-weight: 600;" href="/html/static/add.html" >Add html.</a>
+  <p id="conentLength">
+    25
+  </p>
+</div> 
+
 <div class="link-container" id="link-containerId">
 </div>    
 </body>
-<script src="/html/static/js/index.js"></script>
+<script type="module"  src="/html/static/js/index.js"></script>
 </html>
