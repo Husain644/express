@@ -8,7 +8,6 @@
 </head>
 <body>
     <h4>This is webpage for save your html content in server and give you a link for your page</h4>
-    <h3>Add Html Content to this Box</h3> 
     <p class="viewLink">
       <a href="/html/static/view.html">
         view all files
@@ -17,13 +16,19 @@
     <div class="textareaWrapper">
       <div class="input-wrapper">
         <input id="filename" placeholder="enter file name with extension" />
-        <div class="dropdown">
+         <div>
+          <div class="createFolder"><input id="createFolderInput" placeholder="Enter Folder Name"/>
+         <img src="/html/static/assets/images/create.png" alt="create folder"  id="createFolderBtn" onClick="createFolder()"/>
+         </div>
+          <div class="dropdown">
           <select id="myDropdown">
           </select>
         </div>
+         </div>
         <input type="text" placeholder="enter sub folderName" id="subFolder" />  
         <input type="file" id="myFilesId" name="myFiles"  accept="*/*">
-      </div>
+    
+      </div>   
       <div class="textareaWrapperInner">
         <textarea placeholder="enter your html" value="" id="myTextarea"></textarea>
         <div id="preview">
@@ -47,10 +52,11 @@
 </body>
 
 <script>
+const elm=document.getElementById("myDropdown")
+const createFolderBtn=document.getElementById("createFolderBtn")
 async function getCatogery(){
   fetch('/html//categories').then(async (resp)=>{
     const data = await resp.json();
-    const elm=document.getElementById("myDropdown")
     data.allCategories.forEach((item)=>{
       let s=document.createElement("option");
       s.value=item;
@@ -61,6 +67,48 @@ async function getCatogery(){
   }).catch((error)=>{})
 }
 getCatogery();
+
+async function createFolder(){
+  const folderName = document.getElementById("createFolderInput").value;
+   
+  if(folderName===''){
+    alert('Please enter folder name')
+    return;
+  }
+  try {
+    createFolderBtn.src="/html/static/assets/images/bar.gif"
+    const response = await fetch("/html/createCategory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({folderName}) 
+    });
+     if(response.ok){
+      elm.innerHTML='';
+      getCatogery();
+      createFolderBtn.src="/html/static/assets/images/create.png"
+      document.getElementById("createFolderInput").value='';
+     }
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    if(data.msg){
+      alert(data.msg)
+      const elm=document.getElementById("myDropdown")
+      let s=document.createElement("option");
+      s.value=folderName;
+      s.innerText=folderName;
+      elm.appendChild(s)
+      document.getElementById("createFolderInput").value='';
+    }
+  } catch (error) {
+    alert("Error: " + error.message);
+  }
+}
+
 async function sendData() {
   const fileName = document.getElementById("filename").value;
   const textValue = document.getElementById("myTextarea").value;

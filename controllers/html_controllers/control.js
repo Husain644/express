@@ -30,7 +30,23 @@ export async function getAllCategories(req, res) {   /// get all categories or d
         allCategories: categories
     })
 }
-
+// createCatogery function
+export function createCatogery(req, res) {
+    const folderName = req.body.folderName;
+    if (!folderName) { return res.status(400).json({ error: "Missing required fields" }) };
+    const folderPath = path.join(SavedContent, 'all_files', folderName)
+    try {
+        if (!fs.existsSync(folderPath)) {
+            fs.mkdirSync(folderPath, { recursive: true });
+            return res.status(201).json({ message: 'Category created successfully', folderName });
+        }
+        else {
+            return res.status(409).json({ message: 'Category already exists. Try a different name.' });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: error.message || 'Error creating category' });
+    }
+}
 // ===== Route to save HTML + files =====
 export function SaveData(req, res) {
     const fileName = req.body.fileName
