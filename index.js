@@ -14,10 +14,10 @@ import { limiter } from './utils/utilsFunction.js';
 
 const app = express()
 const server = createServer(app); // create raw HTTP server
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ limit: "20mb",extended: true }));
 app.use(cors())  //cors policy
 app.use(limiter) // rate limiter
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: "10mb" }))
 app.use('/static',express.static(path.join(__dirname, 'static')));  //static files  handling
 app.set('view engine', 'ejs');                                      //ejs engine
 app.set('views','./views')
