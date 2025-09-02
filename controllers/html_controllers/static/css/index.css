@@ -154,11 +154,6 @@ option {
         font-size: 25px;
     }
 
-    .textareaWrapperInner {
-        display: flex;
-        flex-direction: column;
-    }
-
     textarea {
         width: 95%;
     }
@@ -243,4 +238,38 @@ option {
     cursor:pointer;
     padding: 0 5px;
     border-radius:5px;
+}
+@media (max-width:1024px) {
+    .addhtmlheading{
+        font-size: 10px;
+    }
+    #filename{
+        min-width: 150px;
+        font-size: 12px;
+        padding: 5px;
+        border-radius: 2px;
+    }
+    .viewLink{
+        top:70px;
+        right:0px;
+        flex-direction: column;
+    }
+    .input-wrapper{
+        max-width: 98%;
+        flex-wrap: wrap;
+    }
+    .textareaWrapperInner{
+        flex-direction: column;
+        align-items: center;
+    }
+    #myTextarea{
+        min-width: 300px;
+        min-height: 150px;
+    }
+    #preview{
+        width: 98%;
+        margin-left: 0px;
+        margin-top: 10px;
+        height: 200px;
+    }
 }

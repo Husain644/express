@@ -1,6 +1,6 @@
 import express from  'express'
 import { createServer } from "http";
-import { WebSocketServer } from "ws";
+import { Server } from "socket.io";
 import multer from 'multer'
 import path from 'path'
 import dbConnect from './utils/db/db.js';
@@ -23,22 +23,37 @@ app.set('view engine', 'ejs');                                      //ejs engine
 app.set('views','./views')
 app.use('/',router) //Routings ###################  
 
+
+// Attach socket.io to server
+const io = new Server(server, {
+  cors: {
+    origin: "*", // allow all origins (change in production)
+    methods: ["GET", "POST"],
+  },
+});
+
+// Handle socket connections
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+  // Listen for events from client
+  socket.on("message", (data) => {
+    console.log("Message received:", data);
+    // Send back response
+     socket.emit("reply", `Server got your message: ${data}`);
+    for(let i=0;i<=100;i++){
+    setTimeout(()=>{socket.emit("reply", `Server got your message:number is${i}`)},i*100)
+    
+    }
+   
+  });
+  // Handle disconnect 
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+
 server.listen(8000, () => {
   console.log("HTTP + WebSocket running at http://localhost:8000");
 });
-
-const wss = new WebSocketServer({ server }); // WebSocket server
-wss.on("connection", (ws) => {
-  console.log("Client connected");
-  let i = 1;
-  const interval = setInterval(() => {
-    if (i > 100) {
-      clearInterval(interval);
-      ws.close(); // close websocket after sending all numbers
-      return;
-    }
-    ws.send(i.toString()); // send number as string
-    i++;
-  }, 60); // adjust speed
-});
-dbConnect();
+dbConnect() //DB connection

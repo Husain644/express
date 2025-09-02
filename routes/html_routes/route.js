@@ -11,7 +11,6 @@ const reactBuildPath = path.join(__dirname,"../../controllers/html_controllers/"
 const HtmlRouter =express.Router();
 HtmlRouter.use('/static',express.static(path.join(__dirname, "../../controllers/html_controllers/", "static")));
 HtmlRouter.use("/view", express.static(reactBuildPath)); // Serve static files from the React build directory
-
 HtmlRouter.get('/allFilesApi',AllFilesApi) // get all files with catogary
 HtmlRouter.get('/categories',getAllCategories) // get all categories
 HtmlRouter.post('/createCategory',upload.none(),createCatogery)
