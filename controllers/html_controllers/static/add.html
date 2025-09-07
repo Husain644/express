@@ -11,18 +11,10 @@
 <body>
    <div id="toast"></div>
   <h4 class="addhtmlheading">This is webpage for save your html content in server and give you a link for your page</h4>
-  <p class="viewLink">
-    <a href="/html/static/view.html">
-      view all files
-    </a>
-    <a href="/html/view">
-      viewInReact
-    </a>
-  </p>
   <div class="textareaWrapper">
     <div class="input-wrapper">
       <input id="filename" placeholder="enter file name with extension" />
-      <div>
+      <div class="subFolderWrapper" style="margin-top:5px;">
         <div class="createFolder"><input id="createFolderInput" placeholder="Enter Folder Name" />
           <img src="/html/static/assets/images/create.png" alt="create folder" id="createFolderBtn"
             onClick="createFolder()" />
@@ -33,7 +25,7 @@
         </div>
       </div>
       <!-- for sub folder -->
-      <div>
+      <div class="subFolderWrapper">
         <div class="createFolder">
            <input id="createSubFolderInput" placeholder="Enter Sub Folder Name" />
           <img src="/html/static/assets/images/create.png" alt="create folder" id="createFolderBtn"
@@ -44,9 +36,15 @@
           </select>
         </div>
       </div>
-
       <input type="file" id="myFilesId" name="myFiles" accept="*/*">
-
+         <div class="viewLink">
+          <a href="/html/static/view.html">
+          view all files
+          </a>
+          <a href="/html/view">
+          viewInReact
+          </a>
+        </div>
     </div>
     <div class="textareaWrapperInner">
       <textarea placeholder="enter your html" value="" id="myTextarea"></textarea>
@@ -54,7 +52,9 @@
         <h5 class="prev-heading">see preview</h5>
         <iframe id="myIframe"></iframe>
       </div>
+      
     </div>
+
   </div>
   <h4 id="responseText">
   </h4>

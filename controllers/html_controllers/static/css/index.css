@@ -70,6 +70,8 @@ button {
     align-items: center;
     gap:10px;
     margin:10px 0;
+    position: relative;
+    background-color: rgb(65, 105, 225,0.3);
 }
 .textareaWrapperInner {
     display: flex;
@@ -132,6 +134,8 @@ option {
 
 #myFilesId {
     cursor: pointer;
+    max-width: 250px;
+    font-size: 12px;
 }
 
 #options-input {
@@ -144,6 +148,7 @@ option {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    height: 30px;
     position: absolute;
     right: 5px;
     top: 20px;
@@ -283,13 +288,16 @@ option {
         border-radius: 2px;
     }
     .viewLink{
-        top:70px;
+        bottom:-15px;
         right:0px;
-        flex-direction: column;
+        top:unset;
+        font-size:12px;
     }
     .input-wrapper{
-        max-width: 98%;
+        width:100%;
         flex-wrap: wrap;
+        gap:0px;
+        margin: 0px;
     }
     .textareaWrapperInner{
         flex-direction: column;
@@ -299,11 +307,23 @@ option {
         min-width: 300px;
         min-height: 150px;
     }
+    #myFilesId {
+        max-width: 150px;
+        font-size: 8px;
+        margin-left: 10px;
+    }
     #preview{
         width: 98%;
         margin-left: 0px;
         margin-top: 10px;
         height: 200px;
+    }
+    .subFolderWrapper{
+        margin-left: 10px;
+        background-color: rgb(0,0,0,0.2);
+        padding: 5px;
+        border-radius: 5px;
+
     }
     #toast {
         font-size: 14px;
