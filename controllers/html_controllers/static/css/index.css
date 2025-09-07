@@ -337,4 +337,10 @@ option {
         padding: 10px;
         margin-left:-20px;
     }
+    .link-container {
+        justify-content: center;
+    }
+    .links-p {
+        width: 95%;
+    }
 }
