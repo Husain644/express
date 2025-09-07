@@ -30,23 +30,55 @@ export async function getAllCategories(req, res) {   /// get all categories or d
         allCategories: categories
     })
 }
+
+export async function getAllSubCategories(req,res){
+try {
+    const folderName = req.params.folderName;
+    const folderPath = path.join(SavedContent, "all_files", folderName);
+    if (!fs.existsSync(folderPath)) {
+        return res.status(404).json({ error: "Folder not found" });
+    }
+    const subFolders = fs.readdirSync(folderPath).filter(file => {
+        return fs.statSync(path.join(folderPath, file)).isDirectory();
+    });
+    res.json({subFolders})
+} catch (error) {
+     res.status(500).json({error:error.message||"Error fetching subcategories"}) 
+}
+}
 // createCatogery function
 export function createCatogery(req, res) {
-    const folderName = req.body.folderName;
+    const folderName = req.params.folderName;
+    const subFolderName=req.params.subFolderName
     if (!folderName) { return res.status(400).json({ error: "Missing required fields" }) };
-    const folderPath = path.join(SavedContent, 'all_files', folderName)
-    try {
-        if (!fs.existsSync(folderPath)) {
+    if (subFolderName==="none"){
+            const folderPath = path.join(SavedContent, 'all_files', folderName)
+            try {
+            if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
-            return res.status(201).json({ message: 'Category created successfully', folderName });
-        }
-        else {
+            return res.status(201).json({ message: `folder ${folderName} successfully created` });
+            }
+            else {
             return res.status(409).json({ message: 'Category already exists. Try a different name.' });
+            }
+            } catch (error) {
+            return res.status(500).json({ error: error.message || 'Error creating category' });
+            }
+    }else{
+            const folderPath = path.join(SavedContent, 'all_files',folderName,subFolderName)
+            try {
+            if (!fs.existsSync(folderPath)) {
+            fs.mkdirSync(folderPath, { recursive: true });
+            return res.status(201).json({ message: `folder ${subFolderName} created successfully in ${folderName}`});
+            }
+            else {
+            return res.status(409).json({ message: `folder ${subFolderName} allready exist in ${folderName}` });
+            }
+            } catch (error) {
+            return res.status(500).json({ error: error.message || 'Error creating category' });
+            }
+            }
         }
-    } catch (error) {
-        return res.status(500).json({ error: error.message || 'Error creating category' });
-    }
-}
 // ===== Route to save HTML + files =====
 export function SaveData(req, res) {
     const fileName = req.body.fileName

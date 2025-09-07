@@ -11,6 +11,7 @@ import cors from 'cors'
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename);         // get the name of the directory
 import { limiter } from './utils/utilsFunction.js';
+import { chatController } from './controllers/chat_controllser/chat.js';
 
 const app = express()
 const server = createServer(app); // create raw HTTP server
@@ -32,25 +33,14 @@ const io = new Server(server, {
   },
 });
 
-// Handle socket connections
 io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-  // Listen for events from client
-  socket.on("message", (data) => {
-    console.log("Message received:", data);
-    // Send back response
-     socket.emit("reply", `Server got your message: ${data}`);
-    for(let i=0;i<=100;i++){
-    setTimeout(()=>{socket.emit("reply", `Server got your message:number is${i}`)},i*100)
-    
-    }
-   
-  });
-  // Handle disconnect 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+
+})
+
+export const AdminNamespace = io.of("/admin");
+AdminNamespace.on("connection",chatController) 
+export const UserNamespace = io.of("/user");
+UserNamespace.on("connection",chatController) 
 
 
 server.listen(8000, () => {

@@ -4,7 +4,7 @@ import { upload } from '../../middleware/multer.js';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
-import {AllFilesApi,uploadPic,uploadHtml,getAllCategories,getFile,SaveData,createCatogery
+import {AllFilesApi,uploadPic,uploadHtml,getAllCategories,getFile,SaveData,createCatogery,getAllSubCategories
 } from '../../controllers/html_controllers/control.js';
 
 const reactBuildPath = path.join(__dirname,"../../controllers/html_controllers/","static/reactBuild/view")
@@ -13,8 +13,8 @@ HtmlRouter.use('/static',express.static(path.join(__dirname, "../../controllers/
 HtmlRouter.use("/view", express.static(reactBuildPath)); // Serve static files from the React build directory
 HtmlRouter.get('/allFilesApi',AllFilesApi) // get all files with catogary
 HtmlRouter.get('/categories',getAllCategories) // get all categories
-HtmlRouter.post('/createCategory',upload.none(),createCatogery)
-HtmlRouter.get('/categories/:folderName',getAllCategories)  // get specific category details with files
+HtmlRouter.post('/createCategory/:folderName/:subFolderName',upload.none(),createCatogery)
+HtmlRouter.get('/categories/:folderName',getAllSubCategories)  // get specific category details with files
 HtmlRouter.post('/gethtml',upload.single('myFiles'),SaveData)// save html + files  Save Data  // ===== Route to save HTML + files =====
 HtmlRouter.get('/getFile/:folderName/:subFolder/:fileName',getFile) // get specific html file
 HtmlRouter.delete('/deleteFile/:folderName/:subFolder/:fileName',getFile) // delete specific html file

@@ -1,170 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/html/static/css/index.css">
-    <title>add HTML Content to server</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/html/static/css/index.css">
+  <title>add HTML Content to server</title>
 </head>
+
 <body>
-    <h4 class="addhtmlheading">This is webpage for save your html content in server and give you a link for your page</h4>
-    <p class="viewLink">
-      <a href="/html/static/view.html">
-        view all files
-      </a>
-        <a  href="/html/view">
-       viewInReact
-       </a>
-    </p>
-    <div class="textareaWrapper">
-      <div class="input-wrapper">
-        <input id="filename" placeholder="enter file name with extension" />
-         <div>
-          <div class="createFolder"><input id="createFolderInput" placeholder="Enter Folder Name"/>
-         <img src="/html/static/assets/images/create.png" alt="create folder"  id="createFolderBtn" onClick="createFolder()"/>
-         </div>
-          <div class="dropdown">
-          <select id="myDropdown">
+   <div id="toast"></div>
+  <h4 class="addhtmlheading">This is webpage for save your html content in server and give you a link for your page</h4>
+  <p class="viewLink">
+    <a href="/html/static/view.html">
+      view all files
+    </a>
+    <a href="/html/view">
+      viewInReact
+    </a>
+  </p>
+  <div class="textareaWrapper">
+    <div class="input-wrapper">
+      <input id="filename" placeholder="enter file name with extension" />
+      <div>
+        <div class="createFolder"><input id="createFolderInput" placeholder="Enter Folder Name" />
+          <img src="/html/static/assets/images/create.png" alt="create folder" id="createFolderBtn"
+            onClick="createFolder()" />
+        </div>
+        <div class="dropdown" >
+          <select id="myDropdown" onchange="getSubFolder(this.value)">
           </select>
         </div>
-         </div>
-        <input type="text" placeholder="enter sub folderName" id="subFolder" />  
-        <input type="file" id="myFilesId" name="myFiles"  accept="*/*">
-    
-      </div>   
-      <div class="textareaWrapperInner">
-        <textarea placeholder="enter your html" value="" id="myTextarea"></textarea>
-        <div id="preview">
-          <h5 class="prev-heading">see preview</h5>
-          <iframe id="myIframe"></iframe>
+      </div>
+      <!-- for sub folder -->
+      <div>
+        <div class="createFolder">
+           <input id="createSubFolderInput" placeholder="Enter Sub Folder Name" />
+          <img src="/html/static/assets/images/create.png" alt="create folder" id="createFolderBtn"
+            onClick="createSubFolder()" />
+        </div>
+        <div class="dropdown">
+          <select id="myDropdownSubFolder">
+          </select>
         </div>
       </div>
+
+      <input type="file" id="myFilesId" name="myFiles" accept="*/*">
+
     </div>
-      <h4 id="responseText">   
-      </h4>
-      <div class="btnwrapper">
-         <button >
-            Edit Page
-         </button>
-         <button onclick="sendData()" >
-            post
-         </button>
+    <div class="textareaWrapperInner">
+      <textarea placeholder="enter your html" value="" id="myTextarea"></textarea>
+      <div id="preview">
+        <h5 class="prev-heading">see preview</h5>
+        <iframe id="myIframe"></iframe>
       </div>
-  
-   
+    </div>
+  </div>
+  <h4 id="responseText">
+  </h4>
+  <div class="btnwrapper">
+    <button>
+      Edit Page
+    </button>
+    <button onclick="sendData()">
+      post
+    </button>
+  </div>
+
+
 </body>
 
 <script>
-const elm=document.getElementById("myDropdown")
-const createFolderBtn=document.getElementById("createFolderBtn")
-async function getCatogery(){
-  fetch('/html//categories').then(async (resp)=>{
-    const data = await resp.json();
-    data.allCategories.forEach((item)=>{
-      let s=document.createElement("option");
-      s.value=item;
-      s.innerText=item;
-      elm.appendChild(s)
-    })
+  const elm = document.getElementById("myDropdown");
+  const createFolderBtn = document.getElementById("createFolderBtn");
+  const elmSub = document.getElementById("myDropdownSubFolder");
+  const createFolderBtnSub = document.getElementById("createSubFolderBtn");
 
-  }).catch((error)=>{})
-}
-getCatogery();
+  async function getCatogery() {
+    fetch('/html//categories').then(async (resp) => {
+      const data = await resp.json();
+      data.allCategories.forEach((item) => {
+        let s = document.createElement("option");
+        s.value = item;
+        s.innerText = item;
+        elm.appendChild(s)
+      })
 
-async function createFolder(){
-  const folderName = document.getElementById("createFolderInput").value;
-   
-  if(folderName===''){
-    alert('Please enter folder name')
-    return;
+    }).catch((error) => { })
   }
-  try {
-    createFolderBtn.src="/html/static/assets/images/bar.gif"
-    const response = await fetch("/html/createCategory", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({folderName}) 
-    });
-     if(response.ok){
-      elm.innerHTML='';
-      getCatogery();
-      createFolderBtn.src="/html/static/assets/images/create.png"
-      document.getElementById("createFolderInput").value='';
-     }
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+  getCatogery();
+ 
+  async function createFolder() {
+    const folderName = document.getElementById("createFolderInput").value;
+    if (folderName === '') {
+      showToast('enter folder name!','notOk')
+      return;
     }
-
-    const data = await response.json();
-    if(data.msg){
-      alert(data.msg)
-      const elm=document.getElementById("myDropdown")
-      let s=document.createElement("option");
-      s.value=folderName;
-      s.innerText=folderName;
-      elm.appendChild(s)
-      document.getElementById("createFolderInput").value='';
+    try {
+      createFolderBtn.src = "/html/static/assets/images/bar.gif"
+      const response = await fetch(`/html/createCategory/${folderName}/none`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      if (response.ok) {
+        elm.innerHTML = '';
+        getCatogery();
+        createFolderBtn.src = "/html/static/assets/images/create.png"
+        document.getElementById("createFolderInput").value = '';
+      }
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
     }
-  } catch (error) {
-    alert("Error: " + error.message);
   }
-}
 
-async function sendData() {
-  const fileName = document.getElementById("filename").value;
-  const textValue = document.getElementById("myTextarea").value;
-  const category = document.getElementById("myDropdown").value;
-  const subFolder = document.getElementById("subFolder").value;
-  const myFiles = document.getElementById("myFilesId").files;
 
-  // if (fileName === '' | textValue === '' || myFiles.length < 1) {
-  //   alert('Please enter file name, HTML content, and select at least one file');
-  //   return;
-  // }
+  // for sub folder
+ function getSubFolder(selectedValue) {
+    const url=`/html/categories/${selectedValue}`
+    fetch(url).then(async (resp) => {
+      const data = await resp.json();
+      elmSub.innerHTML = '';
+      data.subFolders.forEach((item) => {
+        let s = document.createElement("option");
+        s.value = item;
+        s.innerText = item;
+        elmSub.appendChild(s)
+      })
+    }).catch((error) => { })
+  }
 
-  // ✅ Use FormData instead of JSON
-  const formData = new FormData();
-  formData.append("fileName", fileName);
-  formData.append("textData", textValue);
-  formData.append("folderName", category);
-  formData.append("subFolder", subFolder);
-  formData.append("myFiles", myFiles[0]);
-
-  // // Append each file
-  // for (let i = 0; i < myFiles.length; i++) {
-  //   formData.append("myFiles", myFiles[i]); // "myFiles" matches multer field name
-  // }
-
-  try {
-    const response = await fetch("/html/gethtml", {
-      method: "POST",
-      body: formData // no headers! browser sets correct multipart boundary
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+  async function createSubFolder() {
+    const folderName=elm.value
+    if(!folderName || folderName===''){
+      alert("plese select Folder Name")
     }
+    const subFolderName = document.getElementById("createSubFolderInput").value;
+    if (subFolderName === '') {
+      alert('Please enter sub folder name')
+      return;
+    }
+    try {
+      createFolderBtn.src = "/html/static/assets/images/bar.gif"
+      const response = await fetch(`/html/createCategory/${folderName}/${subFolderName}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      if (response.ok) {
+        elmSub.innerHTML = '';
+        getSubFolder(folderName);
+        createFolderBtn.src = "/html/static/assets/images/create.png"
+        document.getElementById("createFolderInput").value = '';
+      }
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-    const data = await response.json();
-    document.getElementById("responseText").innerHTML =
-      data.msg
-        ? `<h4>${data.msg}</h4>`
-        : `<a href="${data.path}"
+
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  }
+
+
+  async function sendData() {
+    const fileName = document.getElementById("filename").value;
+    const textValue = document.getElementById("myTextarea").value;
+    const category = document.getElementById("myDropdown").value;
+    const subFolder = document.getElementById("myDropdownSubFolder").value;
+    const myFiles = document.getElementById("myFilesId").files;
+    // if (fileName === '' | textValue === '' || myFiles.length < 1) {
+    //   alert('Please enter file name, HTML content, and select at least one file');
+    //   return;
+    // }
+
+    // ✅ Use FormData instead of JSON
+    const formData = new FormData();
+    formData.append("fileName", fileName);
+    formData.append("textData", textValue);
+    formData.append("folderName", category);
+    formData.append("subFolder", subFolder);
+    formData.append("myFiles", myFiles[0]);
+
+    // // Append each file
+    // for (let i = 0; i < myFiles.length; i++) {
+    //   formData.append("myFiles", myFiles[i]); // "myFiles" matches multer field name
+    // }
+
+    try {
+      const response = await fetch("/html/gethtml", {
+        method: "POST",
+        body: formData // no headers! browser sets correct multipart boundary
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      document.getElementById("responseText").innerHTML =
+        data.msg
+          ? `<h4>${data.msg}</h4>`
+          : `<a href="${data.path}"
          target="_blank">See Preview</a>` || `<p>No Response</p>`;
-  } catch (error) {
-    document.getElementById("responseText").innerText = "Error: " + error.message;
-  }
+    } catch (error) {
+      document.getElementById("responseText").innerText = "Error: " + error.message;
+    }
 
-  // Reset form
-  document.getElementById("filename").value = "";
-  document.getElementById("myTextarea").value = "";
-  document.getElementById("myIframe").srcdoc = "";
-}
-const iframe = document.getElementById("myIframe");
-document.getElementById("myTextarea").addEventListener("input", function () {
-  iframe.srcdoc =document.getElementById("myTextarea").value;
-})
+    // Reset form
+    document.getElementById("filename").value = "";
+    document.getElementById("myTextarea").value = "";
+    document.getElementById("myIframe").srcdoc = "";
+  }
+  const iframe = document.getElementById("myIframe");
+  document.getElementById("myTextarea").addEventListener("input", function () {
+    iframe.srcdoc = document.getElementById("myTextarea").value;
+  })
+
+function showToast(text,response) {
+      const toast = document.getElementById("toast");
+      toast.style.color=response==='ok'?'green':'red'
+      toast.innerText=text
+      toast.className = "show";
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, 3000); // hide after 3 seconds
+    }
+
 </script>
+
 </html>
