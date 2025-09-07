@@ -77,7 +77,7 @@
   const createFolderBtnSub = document.getElementById("createSubFolderBtn");
 
   async function getCatogery() {
-    fetch('/html//categories').then(async (resp) => {
+    fetch('/html/categories').then(async (resp) => {
       const data = await resp.json();
       data.allCategories.forEach((item) => {
         let s = document.createElement("option");
@@ -127,8 +127,8 @@
       elmSub.innerHTML = '';
       data.subFolders.forEach((item) => {
         let s = document.createElement("option");
-        s.value = item;
-        s.innerText = item;
+        s.value = item.folderName;
+        s.innerText =item.folderName;
         elmSub.appendChild(s)
       })
     }).catch((error) => { })

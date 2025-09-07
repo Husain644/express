@@ -31,6 +31,7 @@ export async function getAllCategories(req, res) {   /// get all categories or d
     })
 }
 
+
 export async function getAllSubCategories(req,res){
 try {
     const folderName = req.params.folderName;
@@ -38,8 +39,15 @@ try {
     if (!fs.existsSync(folderPath)) {
         return res.status(404).json({ error: "Folder not found" });
     }
-    const subFolders = fs.readdirSync(folderPath).filter(file => {
-        return fs.statSync(path.join(folderPath, file)).isDirectory();
+    const subFolders = fs.readdirSync(folderPath).map(file => {
+       const newFolderPath= fs.statSync(path.join(folderPath, file));
+         if (newFolderPath.isDirectory()) { 
+            const subFolderPath=path.join(folderPath,file)
+            const subFiles=fs.readdirSync(subFolderPath).filter(f=>{return fs.statSync(path.join(subFolderPath,f)).isFile()})
+            return { folderName: file, type: "folder", files:subFiles };
+            } else {
+            return { folderName: file, type: "file" };
+            }
     });
     res.json({subFolders})
 } catch (error) {
