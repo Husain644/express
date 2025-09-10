@@ -1,5 +1,5 @@
 import User from "../../models/accountModels/userModels.js"
-
+import { validateRegister,validateLogin } from "../../middleware/validators/account_valid.js"
 async function userGet(req,res){
 const id=req.body.id
 try {
@@ -17,27 +17,20 @@ try {
 }
 
 async function userPost(req,res){
-    if (!req.body.name || !req.body.email || !req.body.password){
-        return res.status(400).send({"messages":"name, email and password are required"})
+    const { error } = validateRegister(req.body);
+    if (error){
+        return res.status(400).send({ "messages": error.details.map(detail => detail.message) });   
     }
     const existingUser = await User.find ({ email: req.body.email });
     if (existingUser.length > 0) {
         return res.status(400).send({"messages":"User already exists with this email"});
     }
-    if (req.body.password.length < 6){
-        return res.status(400).send({"messages":"password must be at least 6 characters"})
-    }
-    if (req.body.name.length < 3){
-        return res.status(400).send({"messages":"name must be at least 3 characters"})
-    }
-    if (!req.body.email.includes('@')){
-        return res.status(400).send({"messages":"email must be valid"})
-    }
    try {
     const data=req.body
     const responce=await User.create(data)
     const token=await responce.generateAccessToken()
-    res.send({"Resp":responce,"token":token})
+    const refreshToken=await responce.generateRefreshToken()
+    res.send({"Responce":responce,"accessToken":token,"refreshToken":refreshToken})
    } catch (error) {
     res.send(error)
    }
@@ -83,10 +76,16 @@ const all=async (req,res)=>{
 
 
 const login=async (req,res)=>{
+    const {error}=validateLogin(req.body)
+    if (error){
+        return res.status(400).send({ "messages": error.details.map(detail => detail.message) });   
+    }
     try {
-        const username=await User.findOne({email:req.body.email})
+        const email=req.body.email;
+        const password=req.body.password;
+        const username=await User.findOne({email:email})
         if (username){
-            if (await username.isPasswordCorrect(req.body.password)){
+            if (await username.isPasswordCorrect(password)){
                 const token=await username.generateAccessToken()
                 res.cookie('token',token,{
                     httpOnly:true,
@@ -103,6 +102,7 @@ const login=async (req,res)=>{
         }
         else{res.status(404).send({"messages":"user not found"})}
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 }

@@ -1,16 +1,18 @@
 import express from 'express'
-import { userGet,userPost,userDel,login,userPatch,all } from '../../controllers/accountController/userControle.js'
-import { tokenVerify } from '../../middleware/middle.js';
-import { chatController } from '../../controllers/chat_controllser/chat.js';
+import { userGet,userPost,userDel,login,userPatch,all
+ } from '../../controllers/accountController/userControle.js'
+import { tokenVerify,refreshTokenVerify } from '../../middleware/middle.js';  //First verify access token from header(frontend)
 
 
 const userRouter=express.Router()
-userRouter.route('/user')
-.get(tokenVerify,userGet)
-.post(userPost)
-.patch(tokenVerify,userPatch)
-.delete(tokenVerify,userDel)
-userRouter.get('/login',login)  
-userRouter.get('/all',all)
+userRouter.route('/user')  
+.post(userPost)                    // Register new user url is post('http://localhost:8000/account/user')
+.get(tokenVerify,userGet)          // Get user Data or Profile by Token from header(frontend) url is get('http://localhost:8000/account/user')
+.patch(tokenVerify,userPatch)      // Update user by Token from header(frontend) url is patch('http://localhost:8000/account/user')
+.delete(tokenVerify,userDel)       // Delete user by Token from header(frontend) url is delete('http://localhost:8000/account/user')
+userRouter.post('/user/login',login)    // Login user url is post('http://localhost:8000/account/login')
+userRouter.get('/user/refreshToken',refreshTokenVerify)
+userRouter.get('/all',all)         // Get all users url is get('http://localhost:8000/account/all')  it not for production only for testing
 
 export default userRouter;
+

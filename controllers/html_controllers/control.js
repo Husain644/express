@@ -213,3 +213,35 @@ export function getReactFile(req, res) {
     if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath }); }
     res.sendFile(filePath)
 }
+
+export function readFileContent(req, res) {
+    const folderName = req.params.folderName
+    const subFolder = req.params.subFolder
+    const fileName = req.params.fileName
+    const filePath = path.join(SavedContent, `all_files/${folderName}/${subFolder}/${fileName}`)
+    if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath }); }
+    const content = fs.readFileSync(filePath, 'utf8');
+    res.json({ content })
+}
+
+export function updateFileContent(req, res) {
+    console.log(req.body)
+    const oldFolderName = req.params.folderName
+    const oldSubFolder = req.params.subFolder
+    const oldFileName = req.params.fileName
+    const newFolderName = req.body.folderName || oldFolderName
+    const newSubFolder = req.body.subFolder || oldSubFolder
+    const newFileName = req.body.fileName || oldFileName
+    const newTextData = req.body.textData  ||" "
+    const filePath=path.join(SavedContent,`all_files/${oldFolderName}/${oldSubFolder}/${oldFileName}`)
+    const updatedFilePath=path.join(SavedContent,`all_files/${newFolderName}/${newSubFolder}/${newFileName}`)
+    if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath }); }
+    try {
+        fs.unlinkSync(filePath) // delete old file
+        fs.writeFileSync(updatedFilePath,newTextData,'utf8') // create new file
+        res.json({message:"file updated successfully",path:`/html/getFile/${newFolderName}/${newSubFolder}/${newFileName}`})
+    } catch (error) {
+        res.status(500).json({error:error.message||"Error updating file"})
+    }
+   
+}

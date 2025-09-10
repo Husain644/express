@@ -24,13 +24,13 @@ userSchema.methods.isPasswordCorrect=async function(password){
 }
 userSchema.methods.generateAccessToken=async function () {
    return jwt.sign({_id:this.id,
-    email:this.email,
-   },process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1d'})
+   },process.env.ACCESS_TOKEN_SECRET,
+   {expiresIn:process.env.ACCESS_TOKEN_EXPIRE})
 }
 userSchema.methods.generateRefreshToken=async function () {
   return jwt.sign({_id:this.id,
-   email:this.email
-  },process.env.REFRESH_TOKEN_SECRET,{expiresIn:'10d'})
+  },process.env.REFRESH_TOKEN_SECRET,
+  {expiresIn:process.env.REFRESH_TOKEN_EXPIRE})
 }
 const User=mongoose.model('User',userSchema);
 export default User;
