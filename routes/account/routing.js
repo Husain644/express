@@ -1,5 +1,5 @@
 import express from 'express'
-import { userGet,userPost,userDel,login,userPatch,all
+import { userGet,userPost,userDel,login,userPatch,all,sendOtpToMail, subscribe
  } from '../../controllers/accountController/userControle.js'
 import { tokenVerify,refreshTokenVerify } from '../../middleware/middle.js';  //First verify access token from header(frontend)
 
@@ -13,6 +13,7 @@ userRouter.route('/user')
 userRouter.post('/user/login',login)    // Login user url is post('http://localhost:8000/account/login')
 userRouter.get('/user/refreshToken',refreshTokenVerify)
 userRouter.get('/all',all)         // Get all users url is get('http://localhost:8000/account/all')  it not for production only for testing
-
+userRouter.post('/sendmail',sendOtpToMail)
+userRouter.get('/emailsubscribe',subscribe)
 export default userRouter;
 
