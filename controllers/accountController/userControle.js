@@ -173,8 +173,8 @@ async function sendOtpToMail(req,res) {
 function subscribe(req,res){
      const { email } = req.query;
      if (!email) {  return res.status(400).send("Invalid request");}
-    console.log(`${email} unsubscribed`);
-     res.send("You have been unsubscribed successfully!");
+     console.log(`${email} unsubscribed`);
+     res.send(`You-${email} have been unsubscribed successfully!`);
 }
 export {userGet,userPost,userDel,login, userPatch,all,logout,refreshToken ,passwordReset,sendOtpToMail,
         subscribe

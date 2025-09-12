@@ -18,7 +18,7 @@ export default async function SendMail({ to, subject, message }){
         list: {
     unsubscribe: [
       {
-        url: "https:techtt.site/account/emailsubscribe?email=user@example.com",
+        url: `https://techtt.site/account/emailsubscribe?email=${to}`,
         comment: "Unsubscribe from our mailing list",
       },
     ],
