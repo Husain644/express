@@ -115,3 +115,11 @@ export function FolderDetailsInObject(folderPath) {
 
   return result;
 }
+
+// check otp 
+export function isOtpValid(createdAt, expiryMinutes = 5) {
+  const createdTime = new Date(createdAt).getTime(); // convert to ms
+  const now = Date.now();
+  const diffMinutes = (now - createdTime) / (1000 * 60);
+  return diffMinutes <= expiryMinutes;
+}

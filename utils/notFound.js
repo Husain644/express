@@ -7,5 +7,5 @@ const __dirname = path.dirname(__filename)
 
 
 export function NotFound(req,res){
-  res.sendFile(path.join(__dirname, '../static/temp/notfound.html'))
+  res.sendFile(path.join(__dirname, '../static/html/notfound.html'))
 }

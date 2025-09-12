@@ -9,7 +9,9 @@ const userSchema=new mongoose.Schema({
   phone:{type:String,required:true,trim:true},
   age:{type:Number,required:true},
   password:{type:String,required:true,trim:true},
-  isActive:{type:Boolean,default:false},
+  isActive:{type:Boolean,default:false}, //if otp vaerified isActive change to true
+  otp:{type:Number,default:'0000'},
+  otpCreatedAt: {type: Date,default: Date.now}
 },{timestamps:true})
 
 
