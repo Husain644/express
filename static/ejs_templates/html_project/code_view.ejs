@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VS Code–style JSX Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Prism for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-2t9o1+Jr5Jv0I7z3z0qBC4xv3v0GZ0r1o9oUe8k7qgXh3sR7fG6Q0F3q8oVx2q2c6n1y2x3y4z5a6b7c8d9e0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    :root{
+      --bg:#0f1720; /* editor background */
+      --gutter:#0b1220;
+      --editor:#0f1720;
+      --text:#e6eef6;
+      --muted:#9aa8b8;
+      --accent:#007acc;
+      font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+    }
+
+    .container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#0b1220}
+
+    .vscode-window{width:100vw;border-radius:8px;overflow:hidden;box-shadow:0 10px 30px rgba(2,6,23,0.7);background:linear-gradient(180deg,var(--editor),#07101a)}
+
+    /* title bar */
+    .titlebar{display:flex;align-items:center;gap:12px;padding:10px 12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-bottom:1px solid rgba(255,255,255,0.03)}
+    .window-controls{display:flex;gap:8px}
+    .dot{width:12px;height:12px;border-radius:50%}
+    .dot.red{background:#ff5f56}
+    .dot.yellow{background:#ffbd2e}
+    .dot.green{background:#27c93f}
+    .tabs{display:flex;gap:6px;align-items:center;margin-left:8px}
+    .tab{padding:6px 10px;border-radius:6px;color:var(--muted);font-weight:600;font-size:13px}
+    .tab.active{background:rgba(255,255,255,0.03);color:var(--text)}
+    .title-spacer{flex:1}
+    .toolbar{display:flex;gap:8px}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px 8px;border-radius:6px;color:var(--muted);font-size:13px}
+    .editor-wrap{display:flex;align-items:stretch}
+    .gutter{width:56px;background:var(--gutter);padding:12px 8px 12px 8px;color:var(--muted);user-select:none}
+    .gutter pre{margin:0;line-height:1.5;font-size:13px}
+    .editor{flex:1;padding:5px;overflow:auto}
+    pre{margin:0;font-size:14px;line-height:1.5;color:var(--text)}
+    .line-number {
+      display:block;
+      text-align:right;
+      padding-right:12px;
+      color:var(--muted);
+    }
+    .editor ::selection{background:rgba(0,122,204,0.22)}
+    .copy-btn{position:absolute;right:16px;top:12px;padding:6px 8px;border-radius:6px;background:rgba(0,0,0,0.25);color:var(--muted);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    @media (max-width:980px){.vscode-window{width:100%}}
+
+    /* Light theme toggle */
+    .light{
+      --bg:#f3f4f6;--gutter:#edf2f7;--editor:#ffffff;--text:#0b1220;--muted:#6b7280;--accent:#0066bf;
+    }
+    .light .titlebar{background:linear-gradient(180deg,rgba(0,0,0,0.03),transparent)}
+
+    .punctuation{
+      color:#0b4c15;
+      font-weight: bold;
+    }
+    .string{
+      color:#3204a7
+    }
+    .function{
+      color:tomato
+    }
+    .comment{
+      color: rgba(107, 114, 128,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="vscode-window" id="vscode">
+      <div class="titlebar">
+        <div class="window-controls" aria-hidden>
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <div class="tabs">
+          <div class="tab active">App.js — src</div>
+          <div class="tab">index.js</div>
+        </div>
+        <div class="title-spacer"></div>
+        <div class="toolbar">
+          <button class="btn" id="themeToggle" title="Toggle theme">Toggle theme</button>
+        </div>
+      </div>
+
+      <div style="position:relative">
+        <button class="copy-btn" id="copyBtn">Copy JSX</button>
+        <div class="editor-wrap">
+          <div class="gutter" id="gutter"></div>
+          <div class="editor">
+            <pre class="line-numbers">
+            <code id="code" class="language-jsx">
+              <%= code %>
+            </code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prism + plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script>
+    // Add line numbers to the gutter manually to match Prism's rendered lines
+    function populateGutter(){
+      const codeEl = document.getElementById('code');
+      const gutter = document.getElementById('gutter');
+      const lines = codeEl.textContent.split('\n').length;
+      gutter.innerHTML = '<pre style="margin:0;line-height:1;font-size:13px">' +
+        Array.from({length:lines}, (_,i) => '<span class="line-number">' + (i+1) + '</span>').join('\n') +
+        '</pre>';
+    }
+
+    document.addEventListener('DOMContentLoaded', () =>{
+      Prism.highlightAll();
+      populateGutter();
+
+      // Copy button
+      document.getElementById('copyBtn').addEventListener('click', async ()=>{
+        const text = document.getElementById('code').textContent;
+        try{ await navigator.clipboard.writeText(text); document.getElementById('copyBtn').textContent = 'Copied!';
+        setTimeout(()=> document.getElementById('copyBtn').textContent = 'Copy JSX', 1200);
+        }catch(e){ alert('Copy failed — select and press Ctrl+C'); }
+      });
+
+      // theme toggle
+      document.getElementById('vscode').classList.toggle('light');
+      document.getElementById('themeToggle').addEventListener('click', ()=>{
+        document.getElementById('vscode').classList.toggle('light');
+        // switch prism theme by toggling body class could be improved — here we simply invert colors for demo
+      });
+
+      // If user resizes or fonts load, recalc gutter
+      window.addEventListener('resize', populateGutter);
+    });
+  </script>
+</body>
+</html>

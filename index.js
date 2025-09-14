@@ -21,7 +21,7 @@ app.use(limiter) // rate limiter
 app.use(bodyParser.json({ limit: "10mb" }))
 app.use('/static',express.static(path.join(__dirname, 'static')));  //static files  handling
 app.set('view engine', 'ejs');                                      //ejs engine
-app.set('views','./views')
+app.set('views','./static/ejs_templates')
 app.use('/',router) //Routings ###################  
 
 

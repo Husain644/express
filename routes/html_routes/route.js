@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
 import {AllFilesApi,uploadPic,uploadHtml,getAllCategories,getFile,SaveData,createCatogery,getAllSubCategories,
-  readFileContent,updateFileContent} from '../../controllers/html_controllers/control.js';
+  readFileContent,updateFileContent,ejsView} from '../../controllers/html_controllers/control.js';
 
 const reactBuildPath = path.join(__dirname,"../../controllers/html_controllers/","static/reactBuild/view")
 const HtmlRouter =express.Router();
@@ -18,9 +18,9 @@ HtmlRouter.get('/categories/:folderName',getAllSubCategories)  // get specific c
 HtmlRouter.post('/gethtml',upload.single('myFiles'),SaveData)// save html + files  Save Data  // ===== Route to save HTML + files =====
 HtmlRouter.patch('/updateFile/:folderName/:subFolder/:fileName',upload.single('myFiles'),updateFileContent)// update html + files  Save Data  // ===== Route to save HTML + files =====
 HtmlRouter.get('/getFile/:folderName/:subFolder/:fileName',getFile) // get specific html file
-HtmlRouter.delete('/deleteFile/:folderName/:subFolder/:fileName',getFile) // delete specific html file
 HtmlRouter.get('/readFile/:folderName/:subFolder/:fileName',readFileContent) // get specific html file
-
+HtmlRouter.delete('/deleteFile/:folderName/:subFolder/:fileName',getFile) // delete specific html file
+HtmlRouter.get('/ejs',ejsView)
 HtmlRouter.get("/view/*", (req, res) => {
   res.sendFile(path.join(reactBuildPath, "index.html"));
 });

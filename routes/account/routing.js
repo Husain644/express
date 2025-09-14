@@ -1,6 +1,6 @@
 import express from 'express'
 import uploadMulter from '../../middleware/multer.js';
-import { userGet,userPost,userDel,login,userPatch,all,sendOtpToMail, subscribe,checkOtp
+import { userGet,userPost,userDel,login,userPatch,all,sendOtpToMail, subscribe,checkOtp,smsotp
  } from '../../controllers/accountController/userControle.js'
 import { tokenVerify,refreshTokenVerify } from '../../middleware/middle.js';  //First verify access token from header(frontend)
 
@@ -17,5 +17,6 @@ userRouter.post('/check-otp',checkOtp)
 userRouter.get('/all',all)         // Get all users url is get('http://localhost:8000/account/all')  it not for production only for testing
 userRouter.post('/sendmail',uploadMulter.array("files", 10),sendOtpToMail)
 userRouter.get('/emailsubscribe',subscribe)
+userRouter.post('/smsotp',smsotp)
 export default userRouter;
 

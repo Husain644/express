@@ -127,12 +127,24 @@ export function getFile(req, res) {
     const fileName = req.params.fileName 
     const folderName = req.params.folderName
     const subFolder = req.params.subFolder
+    const ext = fileName.includes('.') ? fileName.split('.').pop() : '';
+    
+
 
     let folderPath=path.join(SavedContent,`all_files/${folderName}`)
     folderName === subFolder?folderPath=folderPath:folderPath=path.join(SavedContent,`all_files/${folderName}/${subFolder}`)
     let filePath=path.join(SavedContent, `all_files/${subFolder}/${fileName}`);
-    folderName === subFolder ? filePath = filePath : 
-    filePath = path.join(SavedContent, `all_files/${folderName}/${subFolder}/${fileName}`)
+    folderName === subFolder ? filePath = filePath : filePath = path.join(SavedContent, `all_files/${folderName}/${subFolder}/${fileName}`)
+    
+    if(ext==='jsx'||'tsx'){
+         if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath}); }
+         try {
+              const code = fs.readFileSync(filePath, 'utf8') ||'code does not exist'
+              res.render("html_project/code_view.ejs",{code:code})
+         } catch (error) {
+              res.send("something went wrong")
+         }
+    }
 
     if (req.method === "DELETE") { 
         console.log('delete call ', filePath)
@@ -215,6 +227,7 @@ export function getReactFile(req, res) {
 }
 
 export function readFileContent(req, res) {
+    console.log('okk read fileContent run')
     const folderName = req.params.folderName
     const subFolder = req.params.subFolder
     const fileName = req.params.fileName
@@ -243,5 +256,11 @@ export function updateFileContent(req, res) {
     } catch (error) {
         res.status(500).json({error:error.message||"Error updating file"})
     }
-   
+}
+export function ejsView(req,res){
+  const code=`<View>hello1235</View>`
+  res.render("html_project/code_view.ejs",{code:code})
+
+
+
 }

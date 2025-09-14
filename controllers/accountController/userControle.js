@@ -1,5 +1,6 @@
 import User from "../../models/accountModels/userModels.js"
 import fs from 'fs'
+import axios from "axios"
 import { isOtpValid } from "../../utils/utilsFunction.js"
 import { validateRegister,validateLogin } from "../../middleware/validators/account_valid.js"
 import SendMail from "../../utils/configure/email_send.js"
@@ -254,6 +255,21 @@ function subscribe(req,res){
      console.log(`${email} unsubscribed`);
      res.send(`You-${email} have been unsubscribed successfully!`);
 }
+
+async function smsotp(req,res){
+   try {
+   const phoneNumber=req.body.phone
+   if(!phoneNumber){res.status(400).send({"message":"phoneNumber is required"}) }
+  const API_KEY='AIzaSyDNx8dAQEpsL90JtKriPbeyACtZ2t8OCuQ'
+  const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=${API_KEY}`;
+  const res = await axios.post(url, { phoneNumber:'+916396625635', recaptchaToken: "ignored" });
+  console.log('responce',res)
+  return res.data.sessionInfo; // Save this for verification
+   } catch (error) {
+     res.status(500).send({"message":error||'something went wronge'})
+   }
+}
+
 export {userGet,userPost,userDel,login, userPatch,all,logout,refreshToken ,passwordReset,sendOtpToMail,
-        subscribe,checkOtp
+        subscribe,checkOtp,smsotp
 };
