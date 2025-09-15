@@ -128,15 +128,14 @@ export function getFile(req, res) {
     const folderName = req.params.folderName
     const subFolder = req.params.subFolder
     const ext = fileName.includes('.') ? fileName.split('.').pop() : '';
-    
-
+    console.log(ext)
 
     let folderPath=path.join(SavedContent,`all_files/${folderName}`)
     folderName === subFolder?folderPath=folderPath:folderPath=path.join(SavedContent,`all_files/${folderName}/${subFolder}`)
     let filePath=path.join(SavedContent, `all_files/${subFolder}/${fileName}`);
     folderName === subFolder ? filePath = filePath : filePath = path.join(SavedContent, `all_files/${folderName}/${subFolder}/${fileName}`)
     
-    if(ext==='jsx'||'tsx'){
+    if(ext==='jsx'||ext==='tsx'){
          if (!fs.existsSync(filePath)) { return res.status(404).json({ error: 'File not found', filePath}); }
          try {
               const code = fs.readFileSync(filePath, 'utf8') ||'code does not exist'
