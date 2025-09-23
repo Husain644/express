@@ -6,6 +6,8 @@ const __filename = fileURLToPath(import.meta.url); // get the resolved path to t
 const __dirname = path.dirname(__filename)
 import {  FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
+import Task from './../../models/accountModels/htmlModels.js'
+import { Packages } from './../../models/accountModels/htmlModels.js';
 
 const SavedContent = path.join(__dirname, "../../../savedcontent");  // for linux server
 
@@ -260,6 +262,217 @@ export function ejsView(req,res){
   const code=`<View>hello1235</View>`
   res.render("html_project/code_view.ejs",{code:code})
 
+}
+
+export async function TaskView(req,res){
+  
+  if (req.method==="POST"){
+   try {
+    const { taskName, description, status, dueDate } = req.body;
+    if(!taskName){res.status(401).json({message:"Taks name is required"})}
+     const result=new Task({
+      taskName,
+      description,
+      status,
+      dueDate
+    })
+      result.save()
+      res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      result
+    });
+   } catch (error) {
+       // 🔍 Check for MongoDB duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Task already exists with this name",
+      });
+    }
+       res.status(400).json({
+      success: false,
+      message: "Failed to create task",
+      error: error.message
+    });
+   }
+  }
+  else if(req.method==="DELETE"){
+    const {id}=req.body;
+    try {
+        if (!id) {
+            return res.status(400).json({ success: false, message: "Task ID is required" });
+        }
+        const deletedTask = await Task.findByIdAndDelete(id);
+        if (!deletedTask) {
+            return res.status(404).json({ success: false, message: "Task not found" });
+        }
+        res.json({ success: true, message: "Task deleted successfully", deletedTask });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to delete task", error: error.message });
+    }
+  }
+else if (req.method === "PUT") {
+    const { id, taskName, description, status, dueDate } = req.body;
+    if (!id) {
+        return res.status(400).json({ success: false, message: "Task ID is required" });
+    }
+    try {
+        const updatedTask = await Task.findByIdAndUpdate(
+            id,
+            { taskName, description, status, dueDate },
+            { new: true, runValidators: true }
+        );
+        if (!updatedTask) {
+            return res.status(404).json({ success: false, message: "Task not found" });
+        }
+        res.json({ success: true, message: "Task updated successfully", updatedTask });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to update task", error: error.message });
+    }
+}
+  else{
+    try {
+    const tasks = await Task.find()
+    res.json({ success: true, tasks });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+  }
+}
+// async function readTree() {
+//   const items = await fs.readdir(BASE_DIR, { withFileTypes: true });
+//   const folders = [];
+//   const files = [];
+
+//   for (const it of items) {
+//     if (it.isDirectory()) {
+//       folders.push(it.name);
+//       // include folder files
+//       const sub = await fs.readdir(safePath(it.name), { withFileTypes: true });
+//       for (const s of sub) {
+//         if (s.isFile()) files.push({ name: s.name, folder: it.name });
+//       }
+//     } else if (it.isFile()) {
+//       files.push({ name: it.name, folder: null });
+//     }
+//   }
+
+//   return { folders: folders.sort(), files: files.sort((a, b) => (a.name > b.name ? 1 : -1)) };
+// }
 
 
+// export async function notepad(req,res){
+//     const {folder}=req.params
+//     if (!folder){res.status(400).send({message:"plaese enter folderName"})}
+//     if(req.method==="GET"){
+//     try {
+//         const tree = await readTree();
+//         res.render("html_project/notepad.ejs", { tree });
+//     } catch (err) {
+//         res.status(500).send('Error reading notes: ' + err.message);
+//     }
+
+//     }
+//     else if(req.method==="POST"){
+//     try {
+//     const name = String(req.body.name || '').trim();
+//     if (!name) return res.redirect('/');
+//     // simple validation
+//     if (name.includes('..') || name.includes('/')) return res.status(400).send('Invalid folder name');
+//     const dir = safePath(name);
+//     await fs.mkdir(dir, { recursive: false }).catch(e => { if (e.code !== 'EEXIST') throw e;});
+//     res.redirect('/');
+//   } catch (err) {
+//     res.status(400).send('Error creating folder: ' + err.message);
+//   }
+//     }
+//     else if(req.method==="PATCH"){
+//          res.send({folder,method:'patch'})
+//     }
+//     else if(req.method==="DELETE"){
+//         try {
+//     const name = req.params.name;
+//     const dir = safePath(name);
+//     // remove recursively
+//     await fs.rm(dir, { recursive: true, force: true });
+//     res.redirect('/');
+//   } catch (err) {
+//     res.status(400).send('Error deleting folder: ' + err.message);
+//   }
+//     }
+// }
+
+export function library(req,res){
+    const {framework}=req.params
+    if (!framework){res.status(400).send({message:"plaese enter framework"})}
+    if(req.method==="GET"){
+        const filePath=path.join(__dirname,'../../static')
+        // res.sendFile(filePath)
+         res.send({framework,method:'get'})
+    }
+    else if(req.method==="POST"){
+         res.send({framework,method:'post'})
+    }
+    else if(req.method==="PATCH"){
+         res.send({framework,method:'patch'})
+    }
+    else if(req.method==="DELETE"){
+         res.send({framework,method:'delete'})
+    }
+}
+
+export async function packageView(req,res){
+  
+if (req.method==="POST"){
+    try {
+    const {frameWork,PackagesList}=req.body;  
+    if(!frameWork || !PackagesList){return res.status(401).json({message:"all field required"})}
+    const existing=await Packages.findOne({frameWork})
+    if (existing) {
+        return res.status(400).json({ message: "Package already exists" });
+      }
+    const obj=new Packages({frameWork,PackagesList})
+    await obj.save()
+    if(obj){res.send(obj)}
+    else{return res.status(500).json({message:"something went wrong"})}
+    } 
+    catch (error) {return res.status(401).send(error)}
+}
+else if (req.method==="GET"){
+    const allObj=await Packages.find()
+    console.log(allObj)
+    return res.json({allObj})
+}
+else if(req.method==="DELETE"){
+   try {
+    const {frameWork,PackagesList}=req.body;
+     const Obj=await Packages.deleteOne({frameWork})
+     if(!Obj){return res.status(400).json({message:"not found"})}
+     return res.status(200).json({message:"data deleted"})
+   } catch (error) {
+     return res.status(500).json({message:"some thing wrong"})
+   }
+      
+}
+
+}
+export async function addPackgeView(req,res) {
+  
+    const {frameWork,PackagesList}=req.body
+    console.log(frameWork,PackagesList)
+     if(!frameWork || !PackagesList){return res.status(401).json({message:"all field required"})}
+    try {
+          const Obj=await Packages.findOne({frameWork})
+        if(Obj){
+            Obj.PackagesList=[...new Set([...Obj.PackagesList,...PackagesList])]
+            await Obj.save()
+            return res.json({messages:"updated data",Obj})
+        }
+        else{
+           return res.status(400).json({message:"not found"})
+        }
+    } catch (error) {
+        if(error){return res.json(error)}
+    }
 }

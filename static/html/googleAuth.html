@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Sign-In with Firebase</title>
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    #user-info { margin-top: 20px; }
+    img { border-radius: 50%; }
+  </style>
+</head>
+<body>
+  <h1>Google Sign-In + Firebase Auth</h1>
+
+  <!-- Google Sign-In button -->
+  <div id="g_id_onload"
+       data-client_id="205302710251-cbdco1fa03r11sc9305qcs4u5sit3do4.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-shape="rectangular"
+       data-theme="outline"
+       data-text="sign_in_with"
+       data-size="large">
+  </div>
+
+  <div id="user-info"></div>
+
+  <script>
+    // 🔥 Your Firebase Config (from Firebase Console)
+    const firebaseConfig = {
+
+
+    apiKey: "AIzaSyADse_xnbH8l43EApTcDg7wjtFn61nILhk",
+    authDomain: "newapp-a90db.firebaseapp.com",
+    projectId: "newapp-a90db",
+    storageBucket: "newapp-a90db.firebasestorage.app",
+    messagingSenderId: "205302710251",
+    appId: "1:205302710251:web:2c8b212c7c236492a7e3ae",
+    measurementId: "G-8G8T1ZQ9Y5"
+
+
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Handle Google Identity Services response
+    async function handleCredentialResponse(response) {
+      const idToken = response.credential; // Google ID Token
+
+      // Create Firebase credential with the Google ID token
+      const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+
+      try {
+        // Sign in with Firebase
+        const result = await auth.signInWithCredential(credential);
+        const user = result.user;
+
+        console.log("Firebase User:", user);
+
+        // Show user info
+        document.getElementById("user-info").innerHTML = `
+          <h2>Welcome, ${user.displayName}</h2>
+          <p>Email: ${user.email}</p>
+          <img src="${user.photoURL}" width="100" height="100"/>
+        `;
+      } catch (error) {
+        console.error("Firebase sign-in error:", error);
+        alert("Login failed: " + error.message);
+      }
+    }
+  </script>
+</body>
+</html>

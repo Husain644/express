@@ -1,7 +1,7 @@
 import express from 'express'
 import uploadMulter from '../../middleware/multer.js';
-import { userGet,userPost,userDel,login,userPatch,all,sendOtpToMail, subscribe,checkOtp,smsotp
- } from '../../controllers/accountController/userControle.js'
+import { userGet,userPost,userDel,login,userPatch,all,sendOtpToMail, subscribe,checkOtp,smsotp,
+ googleAuth} from '../../controllers/accountController/userControle.js'
 import { tokenVerify,refreshTokenVerify } from '../../middleware/middle.js';  //First verify access token from header(frontend)
 
 
@@ -18,5 +18,6 @@ userRouter.get('/all',all)         // Get all users url is get('http://localhost
 userRouter.post('/sendmail',uploadMulter.array("files", 10),sendOtpToMail)
 userRouter.get('/emailsubscribe',subscribe)
 userRouter.post('/smsotp',smsotp)
+userRouter.get('/google-auth',googleAuth)
 export default userRouter;
 

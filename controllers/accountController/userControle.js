@@ -1,5 +1,9 @@
 import User from "../../models/accountModels/userModels.js"
 import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename)
 import axios from "axios"
 import { isOtpValid } from "../../utils/utilsFunction.js"
 import { validateRegister,validateLogin } from "../../middleware/validators/account_valid.js"
@@ -270,6 +274,12 @@ async function smsotp(req,res){
    }
 }
 
+
+async function googleAuth(req,res){
+     res.sendFile(path.join(__dirname, '../../static/html/googleAuth.html'))
+}
+
+
 export {userGet,userPost,userDel,login, userPatch,all,logout,refreshToken ,passwordReset,sendOtpToMail,
-        subscribe,checkOtp,smsotp
+        subscribe,checkOtp,smsotp,googleAuth
 };
