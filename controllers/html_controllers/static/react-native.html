@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="icon" href="/html/static/assets/images/react-native.png">
+    <title>Library</title>
+    <style>
+        *{
+            padding:0;
+            margin: 0;
+        }
+        h3{
+            font-size:45px;
+            color: black;
+            text-align: center;
+        }
+        .container{
+            width: 100%;
+         
+        }
+        .inner-container{
+         left:0;
+         right:0;
+         display: flex;
+         flex-direction: row;
+         flex-wrap: wrap;
+         border-top:1px solid #777978;
+         border-bottom:2px solid #f3be79;
+         padding: 5px;
+         justify-content:center;
+        }
+        .link-wrapper{
+        width:98%;
+        background-color:rgb(255, 255, 255);
+        height: 25px;
+        overflow: hidden;
+        margin-top: 5px;
+        padding-left:10px;
+        padding-right: 10px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        }
+        .link-wrapper a{
+            cursor: pointer;
+            color: rgb(3, 3, 102);
+            flex: 2;
+            text-decoration: none;
+            text-transform: capitalize;
+        }
+       .link-wrapper p{
+        border-left: 1px solid #3b3b3b;
+        padding-left: 5px;
+        border-right: 1px solid #3b3b3b;
+        padding-right: 5px;
+        flex: 1;
+       }
+       .cover{
+        height: 100vh;
+        position:fixed;
+        top: 0;
+        right:0;
+        left: 0;
+        background-color: rgb(154, 205, 50,0.5);
+        background-image: url('https://i.makeagif.com/media/1-08-2024/cNofl_.gif');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-attachment: fixed;
+        z-index: -99;
+       }
+    
+    </style>
+</head>
+
+<body>
+    <div class="cover" id="cover-id"></div>
+    <header style="display: flex;flex-direction: row; width:100%;justify-content: center; align-items: center;gap:20px;background-color: rgba(102, 102, 102, 0.5);">
+        <h3>React native packages</h3>
+        <h5 style="font-size: 20px;" id="total-package">Total Packeges 20</h5>
+    </header>
+    <div class="container" id="container-id">
+       <div class="inner-container" id="inner-container-id">
+       </div>
+    </div>
+</body>
+<script>
+async function getData(){
+ const resp=await fetch('/html/react-native-all')
+ const result=await resp.json();
+ result?.obj.forEach((element,index) => {
+  document.getElementById('inner-container-id').insertAdjacentHTML("beforeend", `
+    <div class="link-wrapper">
+      <a href="${element.href}" target="_blank">${index+1}.- ${element.name}</a>
+      <p><i class="fa-solid fa-star" style="color: #f3be79;font-size: 14px;"></i>${ element.star}</p>
+     <p><i class="fa-solid fa-download" style="color:#5656f7;font-size: 14px;"></i> ${element.downloads}</p>
+      <p style="width: 300px;flex:4;font-size:12px">${element.description?element.description:''}</p>
+    </div>
+  `)
+ });
+document.getElementById('total-package').innerText=`Total Packages - ${result?.obj.length}`
+
+
+}
+getData();
+
+
+
+ const background= [
+    'https://gifdb.com/images/high/nature-landscape-background-6tnnhmtb0yy1djui.webp',
+ 'https://i.pinimg.com/originals/f6/6d/96/f66d96849dabdaf3f1e3e57443c258fd.gif',
+ 'https://i.pinimg.com/originals/65/b0/59/65b05933ab0776a765ef40a47564fb80.gif',
+ ];
+
+// Pick a random index
+const randomIndex = Math.floor(Math.random() * background.length);
+  document.getElementById('cover-id').style.backgroundImage = `url(${background[randomIndex]})`
+
+</script>
+</html>

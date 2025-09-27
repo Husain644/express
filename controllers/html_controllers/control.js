@@ -7,8 +7,10 @@ const __dirname = path.dirname(__filename)
 import {  FolderDetailsInObject } from '../../utils/utilsFunction.js';
 import { uploadToCloudinary } from '../../utils/cloudinaryFunction.js';
 import Task from './../../models/accountModels/htmlModels.js'
-import { Packages } from './../../models/accountModels/htmlModels.js';
-
+import { Packages,ReactNativePackages } from './../../models/accountModels/htmlModels.js';
+import * as cheerio from 'cheerio';
+import puppeteer from "puppeteer";
+import e from 'express';
 const SavedContent = path.join(__dirname, "../../../savedcontent");  // for linux server
 
 export async function getAllCategories(req, res) {   /// get all categories or details of a specific category and send  to frontend
@@ -441,7 +443,7 @@ if (req.method==="POST"){
 }
 else if (req.method==="GET"){
     const allObj=await Packages.find()
-    console.log(allObj)
+
     return res.json({allObj})
 }
 else if(req.method==="DELETE"){
@@ -458,9 +460,8 @@ else if(req.method==="DELETE"){
 
 }
 export async function addPackgeView(req,res) {
-  
-    const {frameWork,PackagesList}=req.body
-    console.log(frameWork,PackagesList)
+    if(req.method==="POST"){
+           const {frameWork,PackagesList}=req.body
      if(!frameWork || !PackagesList){return res.status(401).json({message:"all field required"})}
     try {
           const Obj=await Packages.findOne({frameWork})
@@ -474,5 +475,98 @@ export async function addPackgeView(req,res) {
         }
     } catch (error) {
         if(error){return res.json(error)}
+    }
+    }
+    
+   if(req.method==="DELETE"){
+           const {frameWork,PackagesList}=req.body
+     if(!frameWork || !PackagesList){return res.status(401).json({message:"all field required"})}
+    try {
+          const Obj=await Packages.findOne({frameWork})
+        if(Obj){
+            Obj.PackagesList=[...new Set([...Obj.PackagesList,...PackagesList])]
+            await Obj.save()
+            return res.json({messages:"updated data",Obj})
+        }
+        else{
+           return res.status(400).json({message:"not found"})
+        }
+    } catch (error) {
+        if(error){return res.json(error)}
+    }
+    }
+}
+
+export async function Cheerio_control(req, res) {
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const result=[]
+    for(let offset = 0; offset <2060; offset += 30){  
+    await page.goto(`https://reactnative.directory/?offset=${offset}`, { waitUntil: "networkidle0" });
+    await page.waitForSelector("a[href*='github.com']", { timeout:1000 });
+    // Extract packages
+const packages = await page.$$eval(
+  'div.css-g5y9jx.r-kdyh1x.r-rs99b7.r-1ifxtd0.r-1udh08x',
+  els=>els.map((el)=>{
+  const name = el.querySelector('a.css-146c3p1.r-1niwhzg.r-1b6yd1w.r-b88u0q.r-13wfysu')?.innerText || null;
+  const href=el.querySelector('a.css-146c3p1.r-1niwhzg.r-1b6yd1w.r-b88u0q.r-13wfysu')?.href || null
+  const description=el.querySelector('div.css-146c3p1.r-poiln3.r-ubezar.r-ddtstp > span')?.innerText ||null
+  const data=[...el.querySelectorAll('a.css-146c3p1.r-a023e6.r-1od2jal.r-1fvghnm')].map(doc=>doc?.innerText)
+  const lastUpdate=el.querySelector('a.css-146c3p1.r-1niwhzg.r-n6v787.r-1od2jal').innerText || null
+  function removeExtra(string='') {
+  let newString = string;
+  const elm = ['monthly downloads','stars','dependencies','dependency','MB package size','kB package size','hours ago','weeks ago','months ago','years ago',
+     'hour ago','week ago','month ago','year ago',','];
+  for (let item of elm) {
+    newString = newString.replaceAll(item, '').trim();
+  }
+  if(string.includes('MB')){
+    return Number(newString)*1024;
+  }
+  else if(string.split(' ').includes('hours')){return Number(newString)}
+  else if(string.split(' ').includes('weeks')){return Number(newString)*24*7}
+  else if(string.split(' ').includes('months')){return Number(newString)*24*30}
+  else if(string.split(' ').includes('years')){return Number(newString)*24*365}
+  else if(string.split(' ').includes('hour')){return Number(newString)}
+  else if(string.split(' ').includes('week')){return Number(newString)*24*7}
+  else if(string.split(' ').includes('month')){return Number(newString)*24*30}
+  else if(string.split(' ').includes('year')){return Number(newString)*24*365}
+  return Number(newString);
+}
+    return {
+     name,
+     href,
+     description,
+     downloads:removeExtra(data[0]),
+     star:removeExtra(data[1]),
+     dependencies:removeExtra(data[2]),
+     size:removeExtra(data[3]),
+     lastUpdate:removeExtra(lastUpdate),
+  }})
+);
+result.push(...packages)}
+    await browser.close();
+    const pack=await ReactNativePackages.insertMany(result)
+    return res.json({ messages: "ok", 
+        collection:pack.length,
+        pack });
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
+}
+
+export async function ReactNativePackagesView(req,res){
+    try {
+       if (req.method==="GET"){
+        const obj=await ReactNativePackages.find({})
+        return res.status(200).json({collection:obj.length,obj})
+       }
+      if(req.method==="DELETE"){
+        const obj=await ReactNativePackages.deleteMany({})
+        return res.status(200).json(obj)
+      }
+    } catch (error) {
+        res.send({message:error.message})
     }
 }

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename)
 import {AllFilesApi,uploadPic,uploadHtml,getAllCategories,getFile,SaveData,createCatogery,getAllSubCategories,
-  readFileContent,updateFileContent,ejsView,TaskView,packageView,addPackgeView} from '../../controllers/html_controllers/control.js';
+  readFileContent,updateFileContent,ejsView,TaskView,packageView,addPackgeView,Cheerio_control,ReactNativePackagesView} from '../../controllers/html_controllers/control.js';
 
 const reactBuildPath = path.join(__dirname,"../../controllers/html_controllers/","static/reactBuild/view")
 const HtmlRouter =express.Router();
@@ -32,9 +32,10 @@ HtmlRouter.all('/task',upload.none(),TaskView)
 
 
 HtmlRouter.all('/npm',upload.none(),packageView)
-HtmlRouter.post('/npm/add',upload.none(),addPackgeView)
-// HtmlRouter.all('/notepad/:folder',notepad)
+HtmlRouter.all('/npm/add',upload.none(),addPackgeView)
 
+HtmlRouter.get('/cherio',Cheerio_control)
+HtmlRouter.all('/react-native-all',ReactNativePackagesView)
 
 
 

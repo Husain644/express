@@ -293,8 +293,17 @@ async function showData(data) {
         link.className='link-wrapper'
         link.innerHTML=`<a href="https://www.google.com/search?q=${it}+npm&oq=${it}+npm" 
          target="_blank" style="font-size:22px;text-decoration:none;">
-         <i class="fa-brands fa-sistrix" style="margin-right:10px;font-size:15px;color:green;"> ${ind+1}</i>${it}</a>`
+         <i class="fa-brands fa-sistrix" style="margin-right:10px;font-size:15px;color:green;">${ind+1}</i>${it}</a>
+         <a href="https://www.npmjs.com/package/${it}" target="_blank"  style="font-size:40px;text-decoration:none;color:red;padding-left:10px;padding-right:10px"><i class="fa-brands fa-npm"></i></a>
+         <a href="https://www.google.com/search?q=${it}+official+documentation" target="_blank"  style="font-size:15px;text-decoration:none;padding-left:10px;padding-right:10px"><i class="fa-solid fa-house-laptop"></i>Oficial page</a>
+         <a href="https://www.google.com/search?q=about+${it}" target="_blank" style="font-size:18px;text-decoration:none;color:#DB4437;padding-left:10px;padding-right:10px"><i class="fa-brands fa-google"></i></a>
+         <p   class="description">${'this is description'}</p>
+         <button class="npm-delete" ><i class="fa-solid fa-trash-can" style="color:#000"></i></button>
+         `
+        const description=document.createElement('div')
+    
         divIner.appendChild(link)
+      
      })
  
     divIner.className='inner-container'
@@ -311,6 +320,13 @@ async function showData(data) {
     NewHtml.appendChild(divIner)
     document.getElementById("container-id").appendChild(NewHtml)
 })
+}
+
+async function getDesc(keywords) {
+  
+  const result=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${keywords}`)
+  const resp=await result.json()
+  document.getElementById(`desc-${keywords}`).innerText=resp.extract
 }
 
 

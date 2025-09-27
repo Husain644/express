@@ -16,16 +16,24 @@
     border-top:1px solid #777978;
     border-bottom:2px solid #f3be79;
     padding: 20px;
-    justify-content: space-between;
+    justify-content: center;
+   
     }
     .link-wrapper{
-    width:400px;
-    background-color:rgb(255, 255, 255,0.8);
-    height: 25px;
+    width:90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color:rgb(255, 255, 255,0.9);
+    height: 35px;
     border-bottom: 1px solid #999;
     overflow: hidden;
     margin-top: 5px;
     padding-left: 5px;
+    border-radius:5px
     }
     .cover{
     height: 100vh;
@@ -59,12 +67,33 @@
     padding-right: 10px;
     cursor: pointer;
 }
+.npm-delete{
+    padding: 3px;
+    padding-left:10px;
+    padding-right:10px;
+    background-color:rgb(245, 104, 104);
+    border-radius: 3px;
+    color:#fff;
+    font-weight: bolder;
+    text-transform: uppercase;
+    border:none;
+    cursor:pointer;
+}
 .submit:hover{
     background-color: rgb(137, 137, 242);
 }
 .icon{
     color:rgb(0, 8, 255);
     font-size: 45px;
+}
+.description{
+    width: 350px;
+    border-left: 1px solid #80eff0;
+    border-right: 1px solid #80eff0;
+    font-size: 14px;
+    background-color: #dbfad2;
+    overflow:hidden;
+    height: 95%;
 }
 @media (max-width:1024px) {
 .inner-container{
@@ -82,6 +111,9 @@
     padding: 5px;
     font-size: 12px;
     
+}
+.description{
+    width:100px;
 }
 .submit{
     border-radius: 5px;

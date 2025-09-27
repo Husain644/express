@@ -44,5 +44,23 @@ const LibrarySchema=new mongoose.Schema(
     }
     }
 )
-
 export const Packages=  mongoose.model("Packages", LibrarySchema);
+
+const reactNativeSchema=new mongoose.Schema({
+          name:{type:String,
+                 required:true,
+                unique:true
+          },
+          href:String,
+          description:String,
+          downloads:Number,
+          star:Number,
+          dependencies:Number,
+          size:Number,
+          lastUpdate:Number
+})
+export const ReactNativePackages=mongoose.model("ReactNativePackages",reactNativeSchema)
+
+
+
+
