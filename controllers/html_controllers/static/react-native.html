@@ -57,7 +57,7 @@
         padding-left: 5px;
         border-right: 1px solid #3b3b3b;
         padding-right: 5px;
-        flex: 1;
+        width: 150px;
        }
        .cover{
         height: 100vh;
@@ -73,7 +73,19 @@
         background-attachment: fixed;
         z-index: -99;
        }
-    
+        input {
+            padding: 2px;
+            padding-left: 4px;
+            padding-right: 4px;
+            font-size: 15px;
+            
+        }
+        .topBar{
+            background-color: rgb(201, 255, 196);
+            padding: 5px;
+            justify-self: center;
+        }
+
     </style>
 </head>
 
@@ -84,31 +96,92 @@
         <h5 style="font-size: 20px;" id="total-package">Total Packeges 20</h5>
     </header>
     <div class="container" id="container-id">
+              <div class="link-wrapper topBar">
+                 <div  style="flex:2;display: flex; flex-direction:row;gap:10px" >
+                         <h4>packege name</h4>
+                        <input placeholder='search Packeges' id="search-id"/>  
+                 </div>
+                 <div style="flex:1;display: flex; flex-direction:row;gap:5px">
+                    <h4>Assending by Star</h4>
+                     <input  type="checkbox" id="by-star"/>
+                 </div>
+                <div style="flex:1;display: flex; flex-direction:row;gap:5px">
+                      <h5>Assending by Downloads</h5>
+                     <input  type="checkbox" id="by-downloads"/>
+                 </div>
+                       <div  style="flex:4;display: flex; flex-direction:row;gap:10px">
+                         <h4>packege description</h4>
+                        <input placeholder='search by descriptions' id="search-desc-id"/>  
+                 </div>
+             
+                  </div>
        <div class="inner-container" id="inner-container-id">
        </div>
     </div>
 </body>
 <script>
+
 async function getData(){
  const resp=await fetch('/html/react-native-all')
  const result=await resp.json();
- result?.obj.forEach((element,index) => {
+ return result.obj
+}
+
+
+async function showDataInHtml(data=[]){
+ document.getElementById('inner-container-id').innerHTML=''
+data.forEach((element,index) => {
   document.getElementById('inner-container-id').insertAdjacentHTML("beforeend", `
     <div class="link-wrapper">
       <a href="${element.href}" target="_blank">${index+1}.- ${element.name}</a>
       <p><i class="fa-solid fa-star" style="color: #f3be79;font-size: 14px;"></i>${ element.star}</p>
-     <p><i class="fa-solid fa-download" style="color:#5656f7;font-size: 14px;"></i> ${element.downloads}</p>
+      <p><i class="fa-solid fa-download" style="color:#5656f7;font-size: 14px;"></i> ${element.downloads}</p>
       <p style="width: 300px;flex:4;font-size:12px">${element.description?element.description:''}</p>
     </div>
   `)
  });
-document.getElementById('total-package').innerText=`Total Packages - ${result?.obj.length}`
-
-
+document.getElementById('total-package').innerText=`Total Packages - ${data.length}`
 }
-getData();
+getData().then((value)=>{
+    showDataInHtml(value)
+})
 
 
+  const checkStar = document.getElementById("by-star");
+  const checkDownloads = document.getElementById("by-downloads");
+  const searchInput=document.getElementById('search-id')
+  const searchDesc=document.getElementById('search-desc-id')
+
+  checkStar.addEventListener('change', async function(){
+     if(checkStar.checked){
+     const data=await getData();
+     const newData=data.sort((a, b) => b.star - a.star);
+     showDataInHtml(newData)
+     checkDownloads.checked=false
+     }
+  })
+    checkDownloads.addEventListener('change', async function(){
+     if(checkDownloads.checked){ 
+     const data=await getData();
+     const newData=data.sort((a, b) => b.downloads - a.downloads);
+     showDataInHtml(newData)
+    checkStar.checked=false
+    }
+  })
+
+    searchInput.addEventListener('input', async function(e){
+    let text=event.target.value;
+     const data=await getData();
+     const newData=data.filter((item)=>{return item.name?.toLowerCase().includes(text.toLowerCase())});
+     showDataInHtml(newData)
+  })
+    searchDesc.addEventListener('input', async function(e){
+    let text=event.target.value;
+     const data=await getData();
+     const newData=data.filter((item)=>{ 
+        return item.description?.toLowerCase().includes(text.toLowerCase())});
+     showDataInHtml(newData)
+  })
 
  const background= [
     'https://gifdb.com/images/high/nature-landscape-background-6tnnhmtb0yy1djui.webp',
