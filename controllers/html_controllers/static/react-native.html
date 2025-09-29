@@ -102,6 +102,24 @@
           font-size: 10px;
           color: #353535;
          }
+         h4 ,h5{
+          font-size: 10px;
+          border-left: 1px solid #363636;
+          margin-left: 2px;
+          padding-left: 2px;
+         }
+         #search-id{
+          font-size: 12px;
+          padding: 2px;
+          height: 15px;
+          width: 100px;
+         }
+         #search-desc-id{
+          font-size: 12px;
+          padding: 2px;
+          height: 15px;
+          width: 100px;font-size: 12px;
+         }
         }
 
     </style>
@@ -139,10 +157,18 @@
 </body>
 <script>
 
+let lst=[]
 async function getData(){
- const resp=await fetch('/html/react-native-all')
+
+if(lst.length < 2){
+  const resp=await fetch('/html/react-native-all')
  const result=await resp.json();
+ lst=result.obj
  return result.obj
+  }
+  else{
+    return lst
+  }
 }
 
 
