@@ -560,7 +560,6 @@ export async function ReactNativePackagesView(req,res){
     try {
        if (req.method==="GET"){
         const obj=await ReactNativePackages.find({})
-        console.log('running')
         return res.status(200).json({collection:obj.length,obj})
        }
       if(req.method==="DELETE"){
