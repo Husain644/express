@@ -44,6 +44,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        min-height: 40px;
+        border:1px solid #3b3b3b
         }
         .link-wrapper a{
             cursor: pointer;
@@ -84,6 +86,22 @@
             background-color: rgb(201, 255, 196);
             padding: 5px;
             justify-self: center;
+            position: sticky;
+            top:0;
+        }
+        @media (max-width:1024px) {
+          a{
+            font-size: 12px;
+            padding: 0px;
+          }
+         .star-p{
+          max-width:60px;
+          font-size: 14px;
+         }
+         .desc-p{
+          font-size: 10px;
+          color: #353535;
+         }
         }
 
     </style>
@@ -134,9 +152,9 @@ data.forEach((element,index) => {
   document.getElementById('inner-container-id').insertAdjacentHTML("beforeend", `
     <div class="link-wrapper">
       <a href="${element.href}" target="_blank">${index+1}.- ${element.name}</a>
-      <p><i class="fa-solid fa-star" style="color: #f3be79;font-size: 14px;"></i>${ element.star}</p>
-      <p><i class="fa-solid fa-download" style="color:#5656f7;font-size: 14px;"></i> ${element.downloads}</p>
-      <p style="width: 300px;flex:4;font-size:12px">${element.description?element.description:''}</p>
+      <p class="star-p"><i class="fa-solid fa-star" style="color: #f3be79;font-size: 14px;"></i>${ element.star}</p>
+      <p class="star-p"><i class="fa-solid fa-download" style="color:#5656f7;font-size: 14px;"></i> ${element.downloads}</p>
+      <p class="desc-p" style="width: 300px;flex:4;font-size:12px">${element.description?element.description:''}</p>
     </div>
   `)
  });
