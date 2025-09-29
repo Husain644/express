@@ -159,7 +159,6 @@
 
 let lst=[]
 async function getData(){
-
 if(lst.length < 2){
   const resp=await fetch('/html/react-native-all')
  const result=await resp.json();
@@ -178,6 +177,7 @@ data.forEach((element,index) => {
   document.getElementById('inner-container-id').insertAdjacentHTML("beforeend", `
     <div class="link-wrapper">
       <a href="${element.href}" target="_blank">${index+1}.- ${element.name}</a>
+      <a href="https://www.google.com/search?q=npm+${element.name}&oq=npm+${element.name}" target="_blank" style="max-width:20px"><i class="fa-brands fa-google" style="color:red"></i></a>
       <p class="star-p"><i class="fa-solid fa-star" style="color: #f3be79;font-size: 14px;"></i>${ element.star}</p>
       <p class="star-p"><i class="fa-solid fa-download" style="color:#5656f7;font-size: 14px;"></i> ${element.downloads}</p>
       <p class="desc-p" style="width: 300px;flex:4;font-size:12px">${element.description?element.description:''}</p>
